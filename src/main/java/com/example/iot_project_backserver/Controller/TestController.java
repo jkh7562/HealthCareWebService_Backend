@@ -52,12 +52,8 @@ public class TestController {
 
         // 응답을 위한 맵 생성s
         Map<String, String> response = new HashMap<>();
-        response.put("message", "User created successfully");
-        response.put("email", dkdkd);
-        response.put("username", userName);
-        response.put("birth", userBirth);
-        response.put("phoneNum", userPhoneNum);
-        response.put("role", userRole);
+        response.put("EC", "0");  // EC가 0이면 성공
+        response.put("EM", "User created successfully");  // 성공 메시지
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
