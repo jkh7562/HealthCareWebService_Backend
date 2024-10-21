@@ -13,7 +13,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/signup")
-public class TestController {
+public class SignupController {
 
     @PostMapping
     public ResponseEntity<Map<String, String>> createNewUser(
@@ -34,7 +34,6 @@ public class TestController {
         String userRole = role;
 
 
-        String dkdkd = "dsjjfdhsk";
 
         // userImage는 MultipartFile 타입이므로 추가적인 처리가 필요할 수 있음
         if (userImage != null) {
