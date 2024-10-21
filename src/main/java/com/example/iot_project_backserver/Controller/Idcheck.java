@@ -23,11 +23,11 @@ public class Idcheck {
             boolean isUsable = checkIdUsability(email); // ID 사용 가능 여부를 체크하는 로직
 
             if (isUsable) {
-                response.put("status", "success");
-                response.put("message", "이 ID 사용 가능합니다.");
+                response.put("EC", "0"); // 성공 상태 코드
+                response.put("EM", ""); // 메시지는 비워둠
             } else {
-                response.put("status", "error");
-                response.put("message", "이 ID 사용 불가합니다.");
+                response.put("EC", "1"); // 실패 상태 코드
+                response.put("EM", "이 ID 사용 불가합니다."); // 에러 메시지
                 return new ResponseEntity<>(response, HttpStatus.CONFLICT);
             }
 
