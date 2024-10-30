@@ -28,7 +28,11 @@ public class LoginController {
         System.out.println("Password: " + password);
         boolean isAuthenticated = true; // 리스폰을 위한 임시 변수
 
+        int flag = 0;
+
         if (isAuthenticated) {
+            //response.put("EC":0);
+            //response.put("EM":"");
             response.put("message", "로그인 성공");
             // 추가적인 정보(예: JWT 토큰)도 여기에 추가할 수 있습니다.
             return ResponseEntity.ok(response);
