@@ -30,7 +30,7 @@ public class HealthDataServiceImpl implements HealthDataService {
 
     @Override
     public Airflow saveAirflow(Airflow airflow) {
-        return null;
+        return airflowRepository.save(airflow);
     }
 
     @Override
