@@ -1,6 +1,6 @@
 package com.example.iot_project_backserver.service;
 
-import com.example.iot_project_backserver.dto.HealthDataRequestDTO;
+//import com.example.iot_project_backserver.dto.HealthDataRequestDTO;
 import com.example.iot_project_backserver.entity.Airflow;
 import com.example.iot_project_backserver.entity.BodyTemp;
 import com.example.iot_project_backserver.entity.Eog;
@@ -40,17 +40,14 @@ public class HealthDataServiceImpl implements HealthDataService {
         return airflowRepository.findAll();
     }
 
-    /*@Override
-    public BodyTemp saveBodyTempData(BodyTemp bodyTemp) {
-        return bodyTempRepository.save(bodyTemp);
-    }*/
     @Override
     public BodyTemp saveBodyTempData(BodyTemp bodyTemp) {
         // 사용자 ID가 유효한지 확인
         if (!userRepository.existsByUserId(bodyTemp.getUserId())) {
-            throw new CustomException("유효하지 않은 사용자 ID입니다."); // 유효하지 않은 ID일 경우 예외 던지기
+            throw new CustomException("유효하지 않은 사용자 ID입니다."); // 유효하지 않은 ID일 경우 보낼 예외 메시지
         }
-        return bodyTempRepository.save(bodyTemp);
+        //TODO 데이터를 바로 저장하는 것이 아닌 데이터의 수치 판단이 필요
+        return bodyTempRepository.save(bodyTemp); //Id가 유효 할 경우 bodyTemp 데이터 저장
     }
 
     @Override

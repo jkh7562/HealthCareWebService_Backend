@@ -1,3 +1,4 @@
+/*
 package com.example.iot_project_backserver.dto;
 
 import lombok.Getter;
@@ -14,3 +15,4 @@ public class HealthDataRequestDTO {
 
 
 }
+*/
