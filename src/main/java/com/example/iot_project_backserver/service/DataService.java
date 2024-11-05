@@ -1,3 +1,4 @@
+/*
 package com.example.iot_project_backserver.service;
 
 import jakarta.annotation.PostConstruct;
@@ -35,3 +36,4 @@ public class DataService {
         }
     }
 }
+*/

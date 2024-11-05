@@ -1,0 +1,13 @@
+### GET request to example server
+GET https://examples.http-client.intellij.net/get
+    ?generated-in=IntelliJ IDEA
+
+###
+
+POST http://192.168.34.31:8081/ws/bodytemp
+Content-Type: application/json
+
+{
+"userId": 1,
+"bodydata": [23.5,24.1,32.0]
+}

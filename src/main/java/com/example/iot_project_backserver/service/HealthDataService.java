@@ -8,10 +8,11 @@ import com.example.iot_project_backserver.entity.Eog;
 import java.util.List;
 
 public interface HealthDataService {
-
+    //Airflow
     Airflow saveAirflow(Airflow airflow);
     List<Airflow> getAllAirflowData();
 
+    //BodyTemp
     BodyTemp saveBodyTempData(BodyTemp bodyTemp);
     List<BodyTemp> getAllBodyTempData();
 
