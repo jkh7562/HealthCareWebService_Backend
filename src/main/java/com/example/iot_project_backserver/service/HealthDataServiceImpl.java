@@ -1,11 +1,11 @@
 package com.example.iot_project_backserver.service;
 
+import com.example.iot_project_backserver.dto.HealthDataRequestDTO;
 import com.example.iot_project_backserver.entity.Airflow;
 import com.example.iot_project_backserver.entity.BodyTemp;
 import com.example.iot_project_backserver.entity.Eog;
-import com.example.iot_project_backserver.repository.AirflowRepository;
-import com.example.iot_project_backserver.repository.BodyTempRepository;
-import com.example.iot_project_backserver.repository.EogRepository;
+import com.example.iot_project_backserver.exception.CustomException;
+import com.example.iot_project_backserver.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,20 +17,22 @@ public class HealthDataServiceImpl implements HealthDataService {
     private final AirflowRepository airflowRepository;
     private final BodyTempRepository bodyTempRepository;
     private final EogRepository eogRepository;
+    private final UserRepository userRepository;
 
     @Autowired
     public HealthDataServiceImpl(AirflowRepository airflowRepository,
                                  BodyTempRepository bodyTempRepository,
-                                 EogRepository eogRepository) {
+                                 EogRepository eogRepository, UserRepository userRepository) {
         this.airflowRepository = airflowRepository;
         this.bodyTempRepository = bodyTempRepository;
         this.eogRepository = eogRepository;
+        this.userRepository = userRepository;
     }
+     //아이디 값이 유효한지 판단하기 위한 로직
 
 
     @Override
-    public Airflow saveAirflow(Airflow airflow) {
-        return airflowRepository.save(airflow);
+    public Airflow saveAirflow(Airflow airflow) {return airflowRepository.save(airflow);
     }
 
     @Override
@@ -38,8 +40,16 @@ public class HealthDataServiceImpl implements HealthDataService {
         return airflowRepository.findAll();
     }
 
+    /*@Override
+    public BodyTemp saveBodyTempData(BodyTemp bodyTemp) {
+        return bodyTempRepository.save(bodyTemp);
+    }*/
     @Override
     public BodyTemp saveBodyTempData(BodyTemp bodyTemp) {
+        // 사용자 ID가 유효한지 확인
+        if (!userRepository.existsByUserId(bodyTemp.getUserId())) {
+            throw new CustomException("유효하지 않은 사용자 ID입니다."); // 유효하지 않은 ID일 경우 예외 던지기
+        }
         return bodyTempRepository.save(bodyTemp);
     }
 
@@ -57,4 +67,8 @@ public class HealthDataServiceImpl implements HealthDataService {
     public List<Eog> getAllEogData() {
         return eogRepository.findAll();
     }
+
+
+
+
 }

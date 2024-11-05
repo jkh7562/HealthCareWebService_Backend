@@ -8,6 +8,6 @@ POST http://192.168.34.31:8081/ws/bodytemp
 Content-Type: application/json
 
 {
-"userId": 1,
+"userId": "example_user",
 "bodydata": [23.5,24.1,32.0]
 }
