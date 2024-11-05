@@ -18,6 +18,7 @@ public class BodyTemp {
     private String userId;// 사용자 ID
     @ElementCollection // 리스트 형태로 측정 데이터를 저장
     private List<Float> bodydata; // 측정 데이터
+    private String pandan; //판단 데이터
 }
 
 
