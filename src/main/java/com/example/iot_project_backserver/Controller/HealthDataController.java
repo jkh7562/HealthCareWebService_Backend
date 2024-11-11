@@ -47,7 +47,6 @@ public class HealthDataController {
     }
 
     @GetMapping("/eog")
-    public ResponseEntity<List<Eog>> getAllEogData() {
-        return ResponseEntity.ok(healthDataService.getAllEogData());
+    public ResponseEntity<List<Eog>> getAllEogData() {return ResponseEntity.ok(healthDataService.getAllEogData());
     }
 }
