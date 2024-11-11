@@ -4,7 +4,7 @@ package com.example.iot_project_backserver.service;
 import com.example.iot_project_backserver.entity.Airflow;
 import com.example.iot_project_backserver.entity.BodyTemp;
 import com.example.iot_project_backserver.entity.Eog;
-import com.example.iot_project_backserver.entity.ECG
+import com.example.iot_project_backserver.entity.ECG;
 
 import java.util.List;
 
