@@ -21,7 +21,8 @@ public interface HealthDataService {
     Eog saveEogData(Eog eog);
     List<Eog> getAllEogData();
 
-    //Ecg saveEcgData(Ecg ecg);
+    //ECG 관련 메서드
+    ECG saveECGData(ECG ecg); //ECG 데이터 저장 하기
 }
 
 

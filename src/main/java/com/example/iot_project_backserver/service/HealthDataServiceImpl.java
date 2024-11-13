@@ -3,6 +3,7 @@ package com.example.iot_project_backserver.service;
 //import com.example.iot_project_backserver.dto.HealthDataRequestDTO;
 import com.example.iot_project_backserver.entity.Airflow;
 import com.example.iot_project_backserver.entity.BodyTemp;
+import com.example.iot_project_backserver.entity.ECG;
 import com.example.iot_project_backserver.entity.Eog;
 import com.example.iot_project_backserver.exception.CustomException;
 import com.example.iot_project_backserver.repository.*;
@@ -80,6 +81,17 @@ public class HealthDataServiceImpl implements HealthDataService {
     @Override
     public List<BodyTemp> getAllBodyTempData() {
         return bodyTempRepository.findAll();
+    }
+
+
+
+    @Override
+    public ECG saveECGData(ECG ecg) {
+        if (!userRepository.existsByUserId(ecg.getUserId())) {
+            throw new CustomException("유효하지 않은 사용자 ID 입니다.");
+        }
+        //TODO 데이터 판단 필요
+        return ecgRepository.save(ecg);
     }
 
     @Override
