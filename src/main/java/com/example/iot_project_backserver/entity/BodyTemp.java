@@ -23,7 +23,8 @@ public class BodyTemp {
     //@ElementCollection // 리스트 형태로 측정 데이터를 저장
     private float bodydata; // 측정 데이터*/
 
-    //private String pandan; //판단 데이터
+    @Column(nullable = true)
+    private String pandan; //판단 데이터
 
     private String device_id;
 
