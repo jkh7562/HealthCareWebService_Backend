@@ -10,5 +10,5 @@ Content-Type: application/json
 {
   "device_id": "d8:3a:dd:2f:35:94",
   "userId": "example_user",
-"bodydata": [23.5,24.1,32.0]
+"bodydata": "50"
 }
