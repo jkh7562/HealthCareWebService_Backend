@@ -2,6 +2,7 @@ package com.example.iot_project_backserver.Controller;
 
 import com.example.iot_project_backserver.entity.Airflow;
 import com.example.iot_project_backserver.entity.BodyTemp;
+import com.example.iot_project_backserver.entity.ECG;
 import com.example.iot_project_backserver.entity.Eog;
 import com.example.iot_project_backserver.service.HealthDataService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,5 +49,10 @@ public class HealthDataController {
 
     @GetMapping("/eog")
     public ResponseEntity<List<Eog>> getAllEogData() {return ResponseEntity.ok(healthDataService.getAllEogData());
+    }
+
+    @PostMapping("/ecg")
+    public ResponseEntity<ECG> saveECGData(@RequestBody ECG ecg) {
+        return ResponseEntity.ok(healthDataService.saveECGData(ecg));
     }
 }
