@@ -5,22 +5,31 @@ import com.example.iot_project_backserver.entity.BodyTemp;
 import com.example.iot_project_backserver.entity.ECG;
 import com.example.iot_project_backserver.entity.Eog;
 import com.example.iot_project_backserver.service.HealthDataService;
+import com.example.iot_project_backserver.service.ModelDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import com.example.iot_project_backserver.service.ModelData;
 
+@Controller
 @RestController
 @RequestMapping("/ws")
 public class HealthDataController {
 
     private final HealthDataService healthDataService;
+    //임시 데이터 위함
+
 
     @Autowired
     public HealthDataController(HealthDataService healthDataService) {
         this.healthDataService = healthDataService;
     }
+
+    @Autowired
+    public ModelDataService modelDataService;
 
     @PostMapping("/airflow")
     public ResponseEntity<Airflow> saveAirflow(@RequestBody Airflow airflow) { //TODO 이후 valid 이용해서 검증 기증 추가하기
@@ -53,6 +62,7 @@ public class HealthDataController {
 
     @PostMapping("/ecg")
     public ResponseEntity<ECG> saveECGData(@RequestBody ECG ecg) {
+        modelDataService.createExampleDataCSV();
         return ResponseEntity.ok(healthDataService.saveECGData(ecg));
     }
 }

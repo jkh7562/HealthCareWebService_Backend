@@ -37,3 +37,16 @@ public class DataService {
     }
 }
 */
+
+//TODO 임시 랜덤 액셀 파일 생성
+package com.example.iot_project_backserver.service;
+
+import com.example.utils.ExcelGenerator;
+
+public class DataService {
+    public void createExcelReport() {
+        ExcelGenerator.addOrCreateExcelFile("output.xlsx", 100);
+        System.out.println("엑셀 파일 생성 완료!");
+    }
+}
+

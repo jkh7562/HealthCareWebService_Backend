@@ -36,6 +36,20 @@ dependencies {
 
     //TODO 임시 DB 사용 -> 테스트후 제거 요망
     implementation 'com.h2database:h2'
+
+
+    // Apache POI 기본 라이브러리
+    implementation 'org.apache.poi:poi:5.2.3'
+
+    // Apache POI에서 XLSX 형식 지원 (OOXML)
+    implementation 'org.apache.poi:poi-ooxml:5.2.3'
+
+    // 압축된 엑셀 파일 처리 (예: OOXML 파일의 ZIP 구조)
+    implementation 'org.apache.commons:commons-compress:1.24.0'
+
+    // 로그 출력 (필요 시)
+    implementation 'org.slf4j:slf4j-api:2.0.9'
+
 }
 
 tasks.named('test') {
