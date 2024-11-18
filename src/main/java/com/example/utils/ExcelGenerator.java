@@ -54,8 +54,8 @@ public class ExcelGenerator {
         Row headerRow = sheet.createRow(0);
         headerRow.createCell(0).setCellValue("ID");
 
-        double start = 2;
-        double end = 3000;
+        double start = 0.002;
+        double end = 30.000;
         double step = 0.002;
         int colIndex = 1;
 
@@ -80,7 +80,7 @@ public class ExcelGenerator {
             dataRow.createCell(0).setCellValue("ID_" + rowIndex); // ID 열
 
             for (int cellIndex = 1; cellIndex < colCount; cellIndex++) {
-                dataRow.createCell(cellIndex).setCellValue(1 + random.nextInt(30)); // 1~30 사이 랜덤 값
+                dataRow.createCell(cellIndex).setCellValue(30 + random.nextInt(60)); // 1~30 사이 랜덤 값
             }
         }
     }

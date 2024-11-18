@@ -1,3 +1,4 @@
+/*
 package com.example.iot_project_backserver.Controller;
 
 import com.example.utils.NgrokManager;
@@ -18,4 +19,4 @@ public class NgrokController {
     public String getNgrokUrl() {
         return ngrokUrl != null ? ngrokUrl : "ngrok not running.";
     }
-}
+}*/

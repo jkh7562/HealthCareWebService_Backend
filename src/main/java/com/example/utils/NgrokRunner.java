@@ -8,11 +8,7 @@ public class NgrokRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        String ngrokUrl = NgrokManager.startNgrok();
-        if (ngrokUrl != null) {
-            System.out.println("ngrok URL: " + ngrokUrl);
-        } else {
-            System.out.println("Failed to start ngrok.");
-        }
+        System.out.println("Starting ngrok...");
+        NgrokManager.startNgrok();
     }
 }
