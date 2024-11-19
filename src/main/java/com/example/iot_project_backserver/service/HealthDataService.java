@@ -22,7 +22,8 @@ public interface HealthDataService {
     List<Eog> getAllEogData();
 
     //ECG 관련 메서드
-    ECG saveECGData(ECG ecg); //ECG 데이터 저장 하기
+    //ECG saveECGData(ECG ecg); //ECG 데이터 저장 하기
+    void processAndSaveECGData(ECG ecg);
 }
 
 

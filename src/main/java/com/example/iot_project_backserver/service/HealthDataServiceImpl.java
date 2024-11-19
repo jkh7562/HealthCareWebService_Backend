@@ -11,6 +11,7 @@ import jakarta.persistence.Id;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -85,14 +86,44 @@ public class HealthDataServiceImpl implements HealthDataService {
 
 
 
-    @Override
+    /*@Override
     public ECG saveECGData(ECG ecg) {
         if (!userRepository.existsByUserId(ecg.getUserId())) {
             throw new CustomException("유효하지 않은 사용자 ID 입니다.");
         }
         //TODO 데이터 판단 필요
         return ecgRepository.save(ecg);
+    }*/
+
+    @Override
+    public void processAndSaveECGData(ECG ecg) {
+        // 사용자 ID 확인
+        if (!userRepository.existsByUserId(ecg.getUserId())) {
+            throw new CustomException("유효하지 않은 사용자 ID입니다.");
+        }
+
+        // 평균값 및 증가 값 생성
+        List<Float> ecgDataList = ecg.getEcgdata();
+        List<Float> averages = calculateAverages(ecgDataList, 500);
+        List<Float> incrementValues = generateIncrementValues(averages.size());
+
+        // 평균값과 증가 값을 저장
+        for (int i = 0; i < averages.size(); i++) {
+            Float average = averages.get(i);
+            Float increment = incrementValues.get(i);
+
+            // 새로운 ECG 데이터 생성 및 저장
+            ECG averageECG = new ECG();
+            averageECG.setUserId(ecg.getUserId());
+            averageECG.setDevice_id(ecg.getDevice_id());
+            averageECG.setEcgdata(List.of(average));
+            averageECG.setAdditionalInfo(increment);
+            ecgRepository.save(averageECG);
+        }
     }
+
+
+
 
     @Override
     public Eog saveEogData(Eog eog) {
@@ -125,6 +156,28 @@ public class HealthDataServiceImpl implements HealthDataService {
         } else {
             return "알 수 없음";
         }
+    }
+
+
+    //파형데이터 0.5초당 평균 구하기
+    private List<Float> calculateAverages(List<Float> data, int groupSize) {
+        List<Float> averages = new ArrayList<>();
+        int dataSize = data.size();
+        for (int i = 0; i < dataSize; i += groupSize) {
+            List<Float> group = data.subList(i, Math.min(i + groupSize, dataSize));
+            float average = (float) group.stream().mapToDouble(Float::doubleValue).average().orElse(0.0);
+            averages.add(average);
+        }
+        return averages;
+    }
+
+    //db 저장시 0.5초씩 기록
+    private List<Float> generateIncrementValues(int size) {
+        List<Float> incrementValues = new ArrayList<>();
+        for (int i = 1; i <= size; i++) {
+            incrementValues.add(i * 0.5f); // 0.5씩 증가
+        }
+        return incrementValues;
     }
 
 
