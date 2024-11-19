@@ -7,7 +7,7 @@ GET https://examples.http-client.intellij.net/get
 //POST http://192.168.34.31:8081/ws/ecg
 //POST http://localhost:8081/sw/ecg
 //POST https://c090-2406-5900-5071-2ca9-718a-cad1-c6f9-915e.ngrok-free.app/ws/ecg
-POST https://reptile-promoted-publicly.ngrok-free.app /ws/ecg
+POST https://reptile-promoted-publicly.ngrok-free.app/ws/ecg
 Content-Type: application/json
 
 {
