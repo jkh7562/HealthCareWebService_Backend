@@ -59,7 +59,6 @@ public class HealthDataController {
     @GetMapping("/eog")
     public ResponseEntity<List<Eog>> getAllEogData() {return ResponseEntity.ok(healthDataService.getAllEogData());
     }
-
     
     //리스트 평균값 작업 전
     /*@PostMapping("/ecg")
@@ -70,6 +69,7 @@ public class HealthDataController {
 
     @PostMapping("/ecg")
     public ResponseEntity<String> saveECGData(@RequestBody ECG ecg) {
+        modelDataService.createExampleDataCSV();
         healthDataService.processAndSaveECGData(ecg);
         return ResponseEntity.ok("ECG data processed and saved successfully.");
     }
