@@ -15,3 +15,6 @@ Content-Type: application/json
   "userId": "example_user",
 "ecgdata": [23.5, 23.5, 54.0, 43.6]
 }
+
+
+
