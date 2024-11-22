@@ -1,0 +1,15 @@
+### GET request to example server
+GET https://examples.http-client.intellij.net/get
+    ?generated-in=IntelliJ IDEA
+
+###
+
+POST https://reptile-promoted-publicly.ngrok-free.app/ws/ecg
+Content-Type: application/json
+{
+  "id": "user_id",
+  "ecgdata": [
+    {{#for i in range(15000)}}{{random.float(-100, 100)}}{{#unless @last}}, {{/unless}}{{/for}}
+  ],
+  "device_id": "test"
+}

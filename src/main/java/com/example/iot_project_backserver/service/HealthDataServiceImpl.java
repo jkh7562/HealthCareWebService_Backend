@@ -104,7 +104,7 @@ public class HealthDataServiceImpl implements HealthDataService {
 
         // 평균값 및 증가 값 생성
         List<Float> ecgDataList = ecg.getEcgdata();
-        List<Float> averages = calculateAverages(ecgDataList, 500);
+        List<Float> averages = calculateAverages(ecgDataList, 250);
         List<Float> incrementValues = generateIncrementValues(averages.size());
 
         // 평균값과 증가 값을 저장
@@ -179,7 +179,6 @@ public class HealthDataServiceImpl implements HealthDataService {
         }
         return incrementValues;
     }
-
 
 
 

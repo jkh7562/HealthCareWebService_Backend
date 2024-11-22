@@ -22,7 +22,6 @@ public class HealthDataController {
     private final HealthDataService healthDataService;
     //임시 데이터 위함
 
-
     @Autowired
     public HealthDataController(HealthDataService healthDataService) {
         this.healthDataService = healthDataService;

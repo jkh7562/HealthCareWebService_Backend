@@ -30,11 +30,11 @@ public class BodyTemp {
 
     //데이터 저장 시간 기록
     @Column(name = "created_at", updatable = false) // created_at 컬럼 추가
-    private LocalDateTime createdAt;
+    private LocalDate createdAt;
 
     @PrePersist // 엔티티가 저장되기 전에 호출
     protected void onCreate() {
-        createdAt = LocalDateTime.now(); // 현재 시간으로 설정
+        createdAt = LocalDate.now(); // 현재 시간으로 설정
     }
 
 }
