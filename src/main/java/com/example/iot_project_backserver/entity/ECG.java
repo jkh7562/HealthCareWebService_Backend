@@ -22,5 +22,7 @@ public class ECG {
         //private String pandan; //판단 데이터
 
         private String device_id;
-        private Float additionalInfo;
+
+        @ElementCollection
+        private List<Float> additionalInfo;
 }

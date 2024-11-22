@@ -117,7 +117,7 @@ public class HealthDataServiceImpl implements HealthDataService {
             averageECG.setUserId(ecg.getUserId());
             averageECG.setDevice_id(ecg.getDevice_id());
             averageECG.setEcgdata(List.of(average));
-            averageECG.setAdditionalInfo(increment);
+            averageECG.setAdditionalInfo(averages);
             ecgRepository.save(averageECG);
         }
     }

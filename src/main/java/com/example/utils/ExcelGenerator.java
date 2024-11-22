@@ -80,7 +80,7 @@ public class ExcelGenerator {
             dataRow.createCell(0).setCellValue("ID_" + rowIndex); // ID 열
 
             for (int cellIndex = 1; cellIndex < colCount; cellIndex++) {
-                dataRow.createCell(cellIndex).setCellValue(8000 + random.nextInt(10000)); // 1~30 사이 랜덤 값
+                dataRow.createCell(cellIndex).setCellValue(8000 + random.nextInt(2001)); // 1~30 사이 랜덤 값
             }
         }
     }
