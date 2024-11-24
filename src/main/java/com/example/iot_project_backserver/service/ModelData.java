@@ -1,5 +1,7 @@
 package com.example.iot_project_backserver.service;
 
+import com.example.iot_project_backserver.entity.ECG;
+
 public interface ModelData {
-    public void createExampleDataCSV();
+    void createExampleDataCSV(ECG ecg);
 }
