@@ -1,10 +1,7 @@
 package com.example.iot_project_backserver.service;
 
 //import com.example.iot_project_backserver.dto.HealthDataRequestDTO;
-import com.example.iot_project_backserver.entity.Airflow;
-import com.example.iot_project_backserver.entity.BodyTemp;
-import com.example.iot_project_backserver.entity.ECG;
-import com.example.iot_project_backserver.entity.Eog;
+import com.example.iot_project_backserver.entity.*;
 import com.example.iot_project_backserver.exception.CustomException;
 import com.example.iot_project_backserver.repository.*;
 import jakarta.persistence.Id;
@@ -133,8 +130,17 @@ public class HealthDataServiceImpl implements HealthDataService {
         List<Float> ecgDataList = ecg.getEcgdata();
         List<Float> averages = calculateAverages(ecgDataList, 250); // 250개씩 나누어 평균값 계산
 
+        // 평균값과 사용자 ID를 설정
+        List<EcgAverage> averageList = new ArrayList<>();
+        for (Float average : averages) {
+            EcgAverage ecgAverage = new EcgAverage();
+            ecgAverage.setAverageValue(average);
+            ecgAverage.setUserId(ecg.getUserId());
+            averageList.add(ecgAverage);
+        }
+
         // 평균값 리스트를 한 번에 저장
-        ecg.setAverages(averages); // averages 필드에 평균값 리스트 저장
+        ecg.setAverages(averageList); // averages 필드에 평균값 리스트 저장
         ecgRepository.save(ecg); // 원본 데이터와 함께 저장
     }
 
@@ -186,15 +192,6 @@ public class HealthDataServiceImpl implements HealthDataService {
             averages.add(average);
         }
         return averages;
-    }
-
-    //db 저장시 0.5초씩 기록
-    private List<Float> generateIncrementValues(int size) {
-        List<Float> incrementValues = new ArrayList<>();
-        for (int i = 1; i <= size; i++) {
-            incrementValues.add(i * 0.5f); // 0.5씩 증가
-        }
-        return incrementValues;
     }
 
 
