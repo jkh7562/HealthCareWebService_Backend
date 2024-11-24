@@ -23,6 +23,9 @@ public class ECG {
 
         private String device_id;
 
+        /*@ElementCollection
+        private List<Float> additionalInfo;*/
+
         @ElementCollection
-        private List<Float> additionalInfo;
+        private List<Float> averages; // 평균값 리스트 저장
 }

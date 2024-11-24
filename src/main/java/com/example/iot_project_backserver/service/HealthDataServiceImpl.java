@@ -95,7 +95,7 @@ public class HealthDataServiceImpl implements HealthDataService {
         return ecgRepository.save(ecg);
     }*/
 
-    @Override
+    /*@Override
     public void processAndSaveECGData(ECG ecg) {
         // 사용자 ID 확인
         if (!userRepository.existsByUserId(ecg.getUserId())) {
@@ -120,7 +120,24 @@ public class HealthDataServiceImpl implements HealthDataService {
             averageECG.setAdditionalInfo(averages);
             ecgRepository.save(averageECG);
         }
+    }*/
+
+    @Override
+    public void processAndSaveECGData(ECG ecg) {
+        // 사용자 ID 확인
+        if (!userRepository.existsByUserId(ecg.getUserId())) {
+            throw new CustomException("유효하지 않은 사용자 ID입니다.");
+        }
+
+        // 평균값 계산
+        List<Float> ecgDataList = ecg.getEcgdata();
+        List<Float> averages = calculateAverages(ecgDataList, 250); // 250개씩 나누어 평균값 계산
+
+        // 평균값 리스트를 한 번에 저장
+        ecg.setAverages(averages); // averages 필드에 평균값 리스트 저장
+        ecgRepository.save(ecg); // 원본 데이터와 함께 저장
     }
+
 
 
 
