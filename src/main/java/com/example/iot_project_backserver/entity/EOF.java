@@ -7,10 +7,10 @@ import lombok.Setter;
 import java.util.List;
 
 @Entity
-@Table(name = "Airflow")
+@Table(name = "EOF")
 @Getter
 @Setter
-public class Airflow {
+public class EOF {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -18,14 +18,15 @@ public class Airflow {
     private String userId;
 
     @ElementCollection
-    @CollectionTable(name = "airflow_airflowdata", joinColumns = @JoinColumn(name = "airflow_id"))
-    @Column(name = "airflowdata")
-    private List<Float> airflowdata;
+    @CollectionTable(name = "eof_eofdata", joinColumns = @JoinColumn(name = "eof_id"))
+    @Column(name = "eofdata")
+    private List<Float> eofdata;
 
     private String device_id;
 
     @ElementCollection
-    @CollectionTable(name = "airflow_averages", joinColumns = @JoinColumn(name = "airflow_id"))
-    private List<AirflowAverage> averages;
+    @CollectionTable(name = "eof_averages", joinColumns = @JoinColumn(name = "eof_id"))
+    private List<EofAverage> averages;
 }
+
 

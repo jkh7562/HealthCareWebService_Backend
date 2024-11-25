@@ -13,6 +13,6 @@ public interface BodyTempRepository extends JpaRepository<BodyTemp, Long>,Health
     boolean existsByUserId(String userId);
 
 
-    List<BodyTemp> findByUserIdAndCreatedAt(String userId, LocalDate createdAt);
+    //List<BodyTemp> findByUserIdAndCreatedAt(String userId, LocalDate createdAt);
 
 }
