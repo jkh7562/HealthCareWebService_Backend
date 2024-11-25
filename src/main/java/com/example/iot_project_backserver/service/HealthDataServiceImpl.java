@@ -22,22 +22,26 @@ public class HealthDataServiceImpl implements HealthDataService {
     private final BodyTempRepository bodyTempRepository;
     private final EogRepository eogRepository;
     private final EcgRepository ecgRepository;
+    private final EmgRepository emgRepository;
     private final UserRepository userRepository;
+
 
     @Autowired
     public HealthDataServiceImpl(AirflowRepository airflowRepository,
                                  BodyTempRepository bodyTempRepository,
                                  EogRepository eogRepository,
                                  EcgRepository ecgRepository,
+                                 EmgRepository emgRepository,
                                  UserRepository userRepository) {
         this.airflowRepository = airflowRepository;
         this.bodyTempRepository = bodyTempRepository;
         this.eogRepository = eogRepository;
         this.ecgRepository = ecgRepository;
+        this.emgRepository = emgRepository;
         this.userRepository = userRepository;
     }
 
-    // 공통 처리 로직: 제네릭 메서드로 구현
+    // 공통 처리 로직: 제네릭 메서드로 구현  리스트 형식 데이터 처리 윟마
     private <T, A> void processAndSaveData(
             String userId,
             T data,
@@ -115,7 +119,6 @@ public class HealthDataServiceImpl implements HealthDataService {
             return bodyTempRepository.save(bodyTemp);
         }
 
-        //return bodyTempRepository.save(bodyTemp); //Id가 유효 할 경우 bodyTemp 데이터 저장
     }
 
     // Eog 데이터 저장
@@ -131,6 +134,28 @@ public class HealthDataServiceImpl implements HealthDataService {
         validateUserId(airflow.getUserId());
         return airflowRepository.save(airflow);
     }
+
+    @Override
+    public void processAndSaveAirflowData(Airflow airflow) {
+        processAndSaveData(
+                airflow.getUserId(),
+                airflow,
+                250, // 그룹 크기
+                averages -> averages.stream()
+                        .map(avg -> {
+                            AirflowAverage airAverage = new AirflowAverage(); // 올바른 클래스 이름
+                            airAverage.setAverageValue(avg);
+                            airAverage.setUserId(airflow.getUserId());
+                            return airAverage;
+                        })
+                        .collect(Collectors.toList()), // 평균 리스트 생성
+                Airflow::setAverages, // 올바른 메서드 참조
+                airflowRepository::save, // 저장 메서드 참조
+                () -> airflowRepository.findOneByUserId(airflow.getUserId()) // 기존 데이터 확인
+        );
+    }
+
+
 
     // 모든 BodyTemp 데이터 가져오기
     @Override
@@ -161,6 +186,8 @@ public class HealthDataServiceImpl implements HealthDataService {
     private <T> List<Float> getDataList(T data) {
         if (data instanceof ECG) {
             return ((ECG) data).getEcgdata();
+        } else if (data instanceof Airflow) {
+            return ((Airflow) data).getAirflowdata();
         }
         throw new IllegalArgumentException("지원되지 않는 데이터 타입: " + data.getClass().getName());
     }

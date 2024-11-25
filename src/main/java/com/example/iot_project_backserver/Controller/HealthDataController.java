@@ -31,13 +31,15 @@ public class HealthDataController {
     public ModelDataService modelDataService;
 
     @PostMapping("/airflow")
-    public ResponseEntity<Airflow> saveAirflow(@RequestBody Airflow airflow) { //TODO 이후 valid 이용해서 검증 기증 추가하기
-        return ResponseEntity.ok(healthDataService.saveAirflow(airflow));
+    public ResponseEntity<String> saveAirflow(@RequestBody Airflow airflow) { //TODO 이후 valid 이용해서 검증 기증 추가하기
+        modelDataService.createAirflowDataCSV(airflow);
+        healthDataService.processAndSaveAirflowData(airflow);
+        return ResponseEntity.ok("Airflow data processed and saved successfully.");
     }
 
     @GetMapping("/airflow")
     public ResponseEntity<List<Airflow>> getAllAirflowData() {
-        return ResponseEntity.ok(healthDataService.getAllAirflowData());
+        return ResponseEntity.ok(healthDataService.getAllAirflowData());s
     }
 
     @PostMapping("/bodytemp")
@@ -58,17 +60,10 @@ public class HealthDataController {
     @GetMapping("/eog")
     public ResponseEntity<List<Eog>> getAllEogData() {return ResponseEntity.ok(healthDataService.getAllEogData());
     }
-    
-    //리스트 평균값 작업 전
-    /*@PostMapping("/ecg")
-    public ResponseEntity<ECG> saveECGData(@RequestBody ECG ecg) {
-        modelDataService.createExampleDataCSV();
-        return ResponseEntity.ok(healthDataService.saveECGData(ecg));
-    }*/
 
     @PostMapping("/ecg")
     public ResponseEntity<String> saveECGData(@RequestBody ECG ecg) {
-        modelDataService.createExampleDataCSV(ecg);
+        modelDataService.createECGDataCSV(ecg);
         healthDataService.processAndSaveECGData(ecg);
         return ResponseEntity.ok("ECG data processed and saved successfully.");
     }

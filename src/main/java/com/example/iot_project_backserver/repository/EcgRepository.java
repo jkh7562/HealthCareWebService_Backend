@@ -7,8 +7,6 @@ import java.util.Optional;
 
 public interface EcgRepository extends JpaRepository<ECG, Long>, HealthDataRepository<ECG>{
     boolean existsByUserId(String userId);
-
-    //Optional<ECG> findByUserId(String userId);
 }
 
 

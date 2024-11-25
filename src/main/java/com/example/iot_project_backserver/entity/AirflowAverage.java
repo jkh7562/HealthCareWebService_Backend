@@ -7,7 +7,7 @@ import lombok.Setter;
 @Embeddable
 @Getter
 @Setter
-class AirflowAverage {
+public class AirflowAverage {
     private Float averageValue;
     private String userId;
 }
