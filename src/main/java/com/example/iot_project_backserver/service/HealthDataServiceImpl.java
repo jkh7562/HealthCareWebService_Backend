@@ -119,6 +119,7 @@ public class HealthDataServiceImpl implements HealthDataService {
         }
     }*/
 
+
     @Override
     public void processAndSaveECGData(ECG ecg) {
         // 사용자 ID 확인
@@ -126,23 +127,47 @@ public class HealthDataServiceImpl implements HealthDataService {
             throw new CustomException("유효하지 않은 사용자 ID입니다.");
         }
 
-        // 평균값 계산
-        List<Float> ecgDataList = ecg.getEcgdata();
-        List<Float> averages = calculateAverages(ecgDataList, 250); // 250개씩 나누어 평균값 계산
+        // 기존 데이터 확인
+        Optional<ECG> existingEcgOptional = ecgRepository.findOneByUserId(ecg.getUserId());
 
-        // 평균값과 사용자 ID를 설정
-        List<EcgAverage> averageList = new ArrayList<>();
-        for (Float average : averages) {
-            EcgAverage ecgAverage = new EcgAverage();
-            ecgAverage.setAverageValue(average);
-            ecgAverage.setUserId(ecg.getUserId());
-            averageList.add(ecgAverage);
+        if (existingEcgOptional.isPresent()) {
+            // 기존 데이터 업데이트
+            ECG existingEcg = existingEcgOptional.get();
+
+            // ecgdata 업데이트
+            existingEcg.setEcgdata(ecg.getEcgdata());
+
+            // averages 업데이트
+            List<Float> ecgDataList = ecg.getEcgdata();
+            List<Float> averages = calculateAverages(ecgDataList, 250);
+            List<EcgAverage> averageList = new ArrayList<>();
+            for (Float average : averages) {
+                EcgAverage ecgAverage = new EcgAverage();
+                ecgAverage.setAverageValue(average); // 평균값 설정
+                ecgAverage.setUserId(ecg.getUserId()); // 사용자 ID 설정
+                averageList.add(ecgAverage);
+            }
+            existingEcg.setAverages(averageList);
+
+            // 업데이트된 엔티티 저장
+            ecgRepository.save(existingEcg);
+        } else {
+            // 새로운 데이터 추가
+            List<Float> ecgDataList = ecg.getEcgdata();
+            List<Float> averages = calculateAverages(ecgDataList, 250);
+            List<EcgAverage> averageList = new ArrayList<>();
+            for (Float average : averages) {
+                EcgAverage ecgAverage = new EcgAverage();
+                ecgAverage.setAverageValue(average); // 평균값 설정
+                ecgAverage.setUserId(ecg.getUserId()); // 사용자 ID 설정
+                averageList.add(ecgAverage);
+            }
+            ecg.setAverages(averageList);
+            ecgRepository.save(ecg);
         }
-
-        // 평균값 리스트를 한 번에 저장
-        ecg.setAverages(averageList); // averages 필드에 평균값 리스트 저장
-        ecgRepository.save(ecg); // 원본 데이터와 함께 저장
     }
+
+
 
 
 
@@ -181,8 +206,6 @@ public class HealthDataServiceImpl implements HealthDataService {
         }
     }
 
-
-    //파형데이터 0.5초당 평균 구하기
     private List<Float> calculateAverages(List<Float> data, int groupSize) {
         List<Float> averages = new ArrayList<>();
         int dataSize = data.size();
@@ -193,6 +216,7 @@ public class HealthDataServiceImpl implements HealthDataService {
         }
         return averages;
     }
+
 
 
 
