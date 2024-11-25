@@ -7,7 +7,7 @@ import lombok.Setter;
 @Embeddable
 @Getter
 @Setter
-class EmgAverage {
+public class EmgAverage {
     private Float averageValue;
     private String userId;
 }

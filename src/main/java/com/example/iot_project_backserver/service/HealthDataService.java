@@ -29,7 +29,7 @@ public interface HealthDataService {
 
     //void processAndSaveGSRData(GSR gsr);
     void processAndSaveAirflowData(Airflow airflow);
-    //void processAndSaveEmgData(EMG emg);
+    void processAndSaveEMGData(EMG emg);
     void processAndSaveEOGData(EOG eog);
 }
 

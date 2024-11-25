@@ -1,9 +1,6 @@
 package com.example.iot_project_backserver.Controller;
 
-import com.example.iot_project_backserver.entity.Airflow;
-import com.example.iot_project_backserver.entity.BodyTemp;
-import com.example.iot_project_backserver.entity.ECG;
-import com.example.iot_project_backserver.entity.EOG;
+import com.example.iot_project_backserver.entity.*;
 import com.example.iot_project_backserver.service.HealthDataService;
 import com.example.iot_project_backserver.service.ModelDataService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,6 +65,13 @@ public class HealthDataController {
         modelDataService.createECGDataCSV(ecg);
         healthDataService.processAndSaveECGData(ecg);
         return ResponseEntity.ok("ECG data processed and saved successfully.");
+    }
+
+    @PostMapping("/emg")
+    public ResponseEntity<String> saveEMGData(@RequestBody EMG emg) {
+        modelDataService.createEMGDataCSV(emg);
+        healthDataService.processAndSaveEMGData(emg);
+        return ResponseEntity.ok("EMG data processed and saved successfully.");
     }
 
 }

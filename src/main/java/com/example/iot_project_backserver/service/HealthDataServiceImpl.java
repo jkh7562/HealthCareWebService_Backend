@@ -175,6 +175,29 @@ public class HealthDataServiceImpl implements HealthDataService {
         );
     }
 
+    @Override
+    public void processAndSaveEMGData(EMG emg) {
+        processAndSaveData(
+                emg.getUserId(),
+                emg,
+                250,
+                averages -> averages.stream()
+                        .map(avg -> {
+                            EmgAverage emgAverage = new EmgAverage();
+                            emgAverage.setAverageValue(avg);
+                            emgAverage.setUserId(emg.getUserId());
+                            return emgAverage;
+                        })
+                        .collect(Collectors.toList()),
+                EMG::setAverages,
+                emgRepository::save,
+                () -> emgRepository.findOneByUserId(emg.getUserId())
+        );
+    }
+
+
+
+
 
 
     // 모든 BodyTemp 데이터 가져오기
@@ -210,6 +233,8 @@ public class HealthDataServiceImpl implements HealthDataService {
             return ((Airflow) data).getAirflowdata();
         } else if (data instanceof EOG) {
             return ((EOG) data).getEogdata();
+        } else if (data instanceof EMG) {
+            return ((EMG) data).getEmgdata();
         }
         throw new IllegalArgumentException("지원되지 않는 데이터 타입: " + data.getClass().getName());
     }
