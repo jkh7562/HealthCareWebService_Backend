@@ -24,6 +24,7 @@ public class HealthDataServiceImpl implements HealthDataService {
     private final EcgRepository ecgRepository;
     private final EmgRepository emgRepository;
     private final UserRepository userRepository;
+    private final GsrRepository gsrRepository;
 
 
     @Autowired
@@ -32,12 +33,14 @@ public class HealthDataServiceImpl implements HealthDataService {
                                  EogRepository eogRepository,
                                  EcgRepository ecgRepository,
                                  EmgRepository emgRepository,
+                                 GsrRepository gsrRepository,
                                  UserRepository userRepository) {
         this.airflowRepository = airflowRepository;
         this.bodyTempRepository = bodyTempRepository;
         this.eogRepository = eogRepository;
         this.ecgRepository = ecgRepository;
         this.emgRepository = emgRepository;
+        this.gsrRepository = gsrRepository;
         this.userRepository = userRepository;
     }
 
@@ -196,6 +199,25 @@ public class HealthDataServiceImpl implements HealthDataService {
     }
 
 
+    @Override
+    public void processAndSaveGSRData(GSR gsr) {
+        processAndSaveData(
+                gsr.getUserId(),
+                gsr,
+                250,
+                averages -> averages.stream()
+                        .map(avg -> {
+                            GsrAverage gsrAverage = new GsrAverage();
+                            gsrAverage.setAverageValue(avg);
+                            gsrAverage.setUserId(gsr.getUserId());
+                            return gsrAverage;
+                        })
+                        .collect(Collectors.toList()),
+                GSR::setAverages,
+                gsrRepository::save,
+                () -> gsrRepository.findOneByUserId(gsr.getUserId())
+        );
+    }
 
 
 
@@ -235,6 +257,8 @@ public class HealthDataServiceImpl implements HealthDataService {
             return ((EOG) data).getEogdata();
         } else if (data instanceof EMG) {
             return ((EMG) data).getEmgdata();
+        } else if (data instanceof GSR) {
+            return ((GSR) data).getGsrdata();
         }
         throw new IllegalArgumentException("지원되지 않는 데이터 타입: " + data.getClass().getName());
     }

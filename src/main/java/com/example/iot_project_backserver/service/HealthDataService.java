@@ -27,7 +27,7 @@ public interface HealthDataService {
     //ECG saveECGData(ECG ecg); //ECG 데이터 저장 하기
     void processAndSaveECGData(ECG ecg);
 
-    //void processAndSaveGSRData(GSR gsr);
+    void processAndSaveGSRData(GSR gsr);
     void processAndSaveAirflowData(Airflow airflow);
     void processAndSaveEMGData(EMG emg);
     void processAndSaveEOGData(EOG eog);

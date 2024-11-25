@@ -74,4 +74,11 @@ public class HealthDataController {
         return ResponseEntity.ok("EMG data processed and saved successfully.");
     }
 
+    @PostMapping("/gsr")
+    public ResponseEntity<String> saveGSRData(@RequestBody GSR gsr) {
+        modelDataService.createGSRDataCSV(gsr);
+        healthDataService.processAndSaveGSRData(gsr);
+        return ResponseEntity.ok("GSR data processed and saved successfully.");
+    }
+
 }

@@ -7,7 +7,7 @@ import lombok.Setter;
 @Embeddable
 @Getter
 @Setter
-class GsrAverage {
+public class GsrAverage {
     private Float averageValue;
     private String userId;
 }
