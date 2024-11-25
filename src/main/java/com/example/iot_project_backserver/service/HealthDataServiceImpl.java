@@ -123,7 +123,7 @@ public class HealthDataServiceImpl implements HealthDataService {
 
     // Eog 데이터 저장
     @Override
-    public Eog saveEogData(Eog eog) {
+    public EOG saveEogData(EOG eog) {
         validateUserId(eog.getUserId());
         return eogRepository.save(eog);
     }
@@ -155,6 +155,26 @@ public class HealthDataServiceImpl implements HealthDataService {
         );
     }
 
+    @Override
+    public void processAndSaveEOGData(EOG eog) {
+        processAndSaveData(
+                eog.getUserId(),
+                eog,
+                250,
+                averages -> averages.stream()
+                        .map(avg -> {
+                            EogAverage eogAverage = new EogAverage();
+                            eogAverage.setAverageValue(avg);
+                            eogAverage.setUserId(eog.getUserId());
+                            return eogAverage;
+                        })
+                        .collect(Collectors.toList()),
+                EOG::setAverages,
+                eogRepository::save,
+                () -> eogRepository.findOneByUserId(eog.getUserId())
+        );
+    }
+
 
 
     // 모든 BodyTemp 데이터 가져오기
@@ -165,7 +185,7 @@ public class HealthDataServiceImpl implements HealthDataService {
 
     // 모든 Eog 데이터 가져오기
     @Override
-    public List<Eog> getAllEogData() {
+    public List<EOG> getAllEogData() {
         return eogRepository.findAll();
     }
 
@@ -188,6 +208,8 @@ public class HealthDataServiceImpl implements HealthDataService {
             return ((ECG) data).getEcgdata();
         } else if (data instanceof Airflow) {
             return ((Airflow) data).getAirflowdata();
+        } else if (data instanceof EOG) {
+            return ((EOG) data).getEogdata();
         }
         throw new IllegalArgumentException("지원되지 않는 데이터 타입: " + data.getClass().getName());
     }

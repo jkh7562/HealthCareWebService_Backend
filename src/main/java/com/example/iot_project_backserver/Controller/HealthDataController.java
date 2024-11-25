@@ -3,7 +3,7 @@ package com.example.iot_project_backserver.Controller;
 import com.example.iot_project_backserver.entity.Airflow;
 import com.example.iot_project_backserver.entity.BodyTemp;
 import com.example.iot_project_backserver.entity.ECG;
-import com.example.iot_project_backserver.entity.Eog;
+import com.example.iot_project_backserver.entity.EOG;
 import com.example.iot_project_backserver.service.HealthDataService;
 import com.example.iot_project_backserver.service.ModelDataService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +39,7 @@ public class HealthDataController {
 
     @GetMapping("/airflow")
     public ResponseEntity<List<Airflow>> getAllAirflowData() {
-        return ResponseEntity.ok(healthDataService.getAllAirflowData());s
+        return ResponseEntity.ok(healthDataService.getAllAirflowData());
     }
 
     @PostMapping("/bodytemp")
@@ -53,12 +53,14 @@ public class HealthDataController {
     }
 
     @PostMapping("/eog")
-    public ResponseEntity<Eog> saveEogData(@RequestBody Eog eog) {
-        return ResponseEntity.ok(healthDataService.saveEogData(eog));
+    public ResponseEntity<String> saveECGData(@RequestBody EOG eog) {
+        modelDataService.createEOGDataCSV(eog);
+        healthDataService.processAndSaveEOGData(eog);
+        return ResponseEntity.ok("EOG data processed and saved successfully.");
     }
 
     @GetMapping("/eog")
-    public ResponseEntity<List<Eog>> getAllEogData() {return ResponseEntity.ok(healthDataService.getAllEogData());
+    public ResponseEntity<List<EOG>> getAllEogData() {return ResponseEntity.ok(healthDataService.getAllEogData());
     }
 
     @PostMapping("/ecg")

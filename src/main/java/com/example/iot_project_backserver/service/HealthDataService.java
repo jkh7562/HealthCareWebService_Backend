@@ -3,10 +3,9 @@ package com.example.iot_project_backserver.service;
 
 import com.example.iot_project_backserver.entity.Airflow;
 import com.example.iot_project_backserver.entity.BodyTemp;
-import com.example.iot_project_backserver.entity.Eog;
+import com.example.iot_project_backserver.entity.EOG;
 import com.example.iot_project_backserver.entity.ECG;
 import com.example.iot_project_backserver.entity.EMG;
-import com.example.iot_project_backserver.entity.EOF;
 import com.example.iot_project_backserver.entity.GSR;
 
 import java.util.List;
@@ -21,17 +20,17 @@ public interface HealthDataService {
     List<BodyTemp> getAllBodyTempData();
 
     // Eog 관련 메서드
-    Eog saveEogData(Eog eog);
-    List<Eog> getAllEogData();
+    EOG saveEogData(EOG eog);
+    List<EOG> getAllEogData();
 
     //ECG 관련 메서드
     //ECG saveECGData(ECG ecg); //ECG 데이터 저장 하기
     void processAndSaveECGData(ECG ecg);
 
     //void processAndSaveGSRData(GSR gsr);
-    //void processAndSaveEOFData(EOF eof);
     void processAndSaveAirflowData(Airflow airflow);
     //void processAndSaveEmgData(EMG emg);
+    void processAndSaveEOGData(EOG eog);
 }
 
 
