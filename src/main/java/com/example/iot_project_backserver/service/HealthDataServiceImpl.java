@@ -94,19 +94,28 @@ public class HealthDataServiceImpl implements HealthDataService {
         );
     }
 
-    // BodyTemp 데이터 처리 및 저장
     @Override
     public BodyTemp saveBodyTempData(BodyTemp bodyTemp) {
-        processAndSaveData(
-                bodyTemp.getUserId(),
-                bodyTemp,
-                1, // 그룹 크기 (BodyTemp는 평균 계산이 필요 없음)
-                averages -> new ArrayList<>(), // BodyTemp는 평균값 엔티티 필요 없음
-                (data, averages) -> data.setPandan(BodyTempStatus(data.getBodydata())),
-                bodyTempRepository::save,
-                () -> bodyTempRepository.findOneByUserId(bodyTemp.getUserId())
-        );
-        return bodyTemp;
+        // 사용자 ID가 유효한지 확인
+        if (!userRepository.existsByUserId(bodyTemp.getUserId())) {
+            throw new CustomException("유효하지 않은 사용자 ID입니다."); // 유효하지 않은 ID일 경우 보낼 예외 메시지
+        }
+
+        Optional<BodyTemp> existingBodyTemp = bodyTempRepository.findOneByUserId(bodyTemp.getUserId());
+        //TODO 데이터를 바로 저장하는 것이 아닌 데이터의 수치 판단이 필요
+        String pandanStatus = BodyTempStatus(bodyTemp.getTempdata());
+        bodyTemp.setPandan(pandanStatus);
+
+        if(existingBodyTemp.isPresent()){
+            BodyTemp updatedBodyTemp = existingBodyTemp.get();
+            updatedBodyTemp.setTempdata(bodyTemp.getTempdata());
+            updatedBodyTemp.setPandan(pandanStatus);
+            return bodyTempRepository.save(updatedBodyTemp);
+        }else {
+            return bodyTempRepository.save(bodyTemp);
+        }
+
+        //return bodyTempRepository.save(bodyTemp); //Id가 유효 할 경우 bodyTemp 데이터 저장
     }
 
     // Eog 데이터 저장

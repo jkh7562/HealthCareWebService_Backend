@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "bodydata") // 사용할 테이블 이름 작성
+@Table(name = "tempdata") // 사용할 테이블 이름 작성
 @Getter
 @Setter
 public class BodyTemp {
@@ -20,8 +20,8 @@ public class BodyTemp {
 
     private String userId;// 사용자 ID
 
-    //@ElementCollection // 리스트 형태로 측정 데이터를 저장
-    private float tempdata; // 측정 데이터*/
+    @JsonProperty("tempdata")
+    private float tempdata; // JSON에서 문자열도 변환 가능하게 설정
 
     @Column(nullable = true)
     private String pandan; //판단 데이터
@@ -36,6 +36,7 @@ public class BodyTemp {
     protected void onCreate() {
         createdAt = LocalDate.now(); // 현재 시간으로 설정
     }
+
 
 }
 
