@@ -25,6 +25,7 @@ public class HealthDataServiceImpl implements HealthDataService {
     private final EmgRepository emgRepository;
     private final UserRepository userRepository;
     private final GsrRepository gsrRepository;
+    private final NIBPRepository nibpRepository;
 
 
     @Autowired
@@ -34,6 +35,7 @@ public class HealthDataServiceImpl implements HealthDataService {
                                  EcgRepository ecgRepository,
                                  EmgRepository emgRepository,
                                  GsrRepository gsrRepository,
+                                 NIBPRepository nibpRepository,
                                  UserRepository userRepository) {
         this.airflowRepository = airflowRepository;
         this.bodyTempRepository = bodyTempRepository;
@@ -41,6 +43,7 @@ public class HealthDataServiceImpl implements HealthDataService {
         this.ecgRepository = ecgRepository;
         this.emgRepository = emgRepository;
         this.gsrRepository = gsrRepository;
+        this.nibpRepository = nibpRepository;
         this.userRepository = userRepository;
     }
 
@@ -104,9 +107,10 @@ public class HealthDataServiceImpl implements HealthDataService {
     @Override
     public BodyTemp saveBodyTempData(BodyTemp bodyTemp) {
         // 사용자 ID가 유효한지 확인
-        if (!userRepository.existsByUserId(bodyTemp.getUserId())) {
+        /*if (!userRepository.existsByUserId(bodyTemp.getUserId())) {
             throw new CustomException("유효하지 않은 사용자 ID입니다."); // 유효하지 않은 ID일 경우 보낼 예외 메시지
-        }
+        }*/
+        validateUserId(bodyTemp.getUserId());
 
         Optional<BodyTemp> existingBodyTemp = bodyTempRepository.findOneByUserId(bodyTemp.getUserId());
         //TODO 데이터를 바로 저장하는 것이 아닌 데이터의 수치 판단이 필요
@@ -121,9 +125,29 @@ public class HealthDataServiceImpl implements HealthDataService {
         }else {
             return bodyTempRepository.save(bodyTemp);
         }
-
     }
 
+    @Override
+    public NIBP saveNIBPData(NIBP nibp) {
+        validateUserId(nibp.getUserId());
+        Optional<NIBP> existingNIBP =nibpRepository.findOneByUserId(nibp.getUserId());
+        String pandanStatus = NIBPStatus(nibp.getNibpdata());
+        nibp.setPandan(pandanStatus);
+
+        if(existingNIBP.isPresent()){
+            NIBP updatedNIBP = existingNIBP.get();
+            updatedNIBP.setNibpdata(nibp.getNibpdata());
+            updatedNIBP.setPandan(pandanStatus);
+            return nibpRepository.save(updatedNIBP);
+        } else {
+            return nibpRepository.save(nibp);
+        }
+       //임시로 추가한 부분 return nibpRepository.save(nibp);
+    };
+    /*@Override
+    public List<NIBP> getAllNIBPData(){
+        //  임시로 추가한 부분 return nibpRepository.findAll();
+    };*/
     // Eog 데이터 저장
     @Override
     public EOG saveEogData(EOG eog) {
@@ -289,6 +313,14 @@ public class HealthDataServiceImpl implements HealthDataService {
             return "저체온";
         } else {
             return "알 수 없음";
+        }
+    }
+
+    private String NIBPStatus(float nibpdata) {
+        if (nibpdata >= 100 && nibpdata <= 250) {
+            return "정상";
+        } else {
+            return "비정상";
         }
     }
 }

@@ -1,12 +1,7 @@
 package com.example.iot_project_backserver.service;
 
 
-import com.example.iot_project_backserver.entity.Airflow;
-import com.example.iot_project_backserver.entity.BodyTemp;
-import com.example.iot_project_backserver.entity.EOG;
-import com.example.iot_project_backserver.entity.ECG;
-import com.example.iot_project_backserver.entity.EMG;
-import com.example.iot_project_backserver.entity.GSR;
+import com.example.iot_project_backserver.entity.*;
 
 import java.util.List;
 
@@ -18,6 +13,10 @@ public interface HealthDataService {
     //BodyTemp
     BodyTemp saveBodyTempData(BodyTemp bodyTemp);
     List<BodyTemp> getAllBodyTempData();
+
+    //NIBP
+    NIBP saveNIBPData(NIBP nibp);
+    //List<NIBP> getAllNIBPData();
 
     // Eog 관련 메서드
     EOG saveEogData(EOG eog);

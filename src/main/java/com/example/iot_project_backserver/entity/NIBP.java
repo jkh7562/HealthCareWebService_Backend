@@ -10,18 +10,18 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "tempdata") // 사용할 테이블 이름 작성
+@Table(name = "NIBPdata") // 사용할 테이블 이름 작성
 @Getter
 @Setter
-public class BodyTemp {
+public class NIBP {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // 기본키 생성
     private Long id; //TODO 사용자 ID를 기본키로 사용하려면 수정 필요
 
     private String userId;// 사용자 ID
 
-    @JsonProperty("tempdata")
-    private float tempdata; // JSON에서 문자열도 변환 가능하게 설정
+    @JsonProperty("nibpdata")
+    private float nibpdata; // JSON에서 문자열도 변환 가능하게 설정
 
     @Column(nullable = true)
     private String pandan; //판단 데이터
