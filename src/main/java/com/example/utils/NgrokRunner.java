@@ -1,3 +1,4 @@
+/*
 package com.example.utils;
 
 import org.springframework.boot.CommandLineRunner;
@@ -12,3 +13,4 @@ public class NgrokRunner implements CommandLineRunner {
         NgrokManager.startNgrok();
     }
 }
+*/

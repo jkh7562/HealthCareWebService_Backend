@@ -26,6 +26,7 @@ public class HealthDataServiceImpl implements HealthDataService {
     private final UserRepository userRepository;
     private final GsrRepository gsrRepository;
     private final NIBPRepository nibpRepository;
+    private final Spo2Repository spo2Repository;
 
 
     @Autowired
@@ -36,6 +37,7 @@ public class HealthDataServiceImpl implements HealthDataService {
                                  EmgRepository emgRepository,
                                  GsrRepository gsrRepository,
                                  NIBPRepository nibpRepository,
+                                 Spo2Repository spo2Repository,
                                  UserRepository userRepository) {
         this.airflowRepository = airflowRepository;
         this.bodyTempRepository = bodyTempRepository;
@@ -44,6 +46,7 @@ public class HealthDataServiceImpl implements HealthDataService {
         this.emgRepository = emgRepository;
         this.gsrRepository = gsrRepository;
         this.nibpRepository = nibpRepository;
+        this.spo2Repository = spo2Repository;
         this.userRepository = userRepository;
     }
 
@@ -127,27 +130,42 @@ public class HealthDataServiceImpl implements HealthDataService {
         }
     }
 
+    //spo2 데이터 저장
+    @Override
+    public SPO2 saveSPO2(SPO2 spo2) {
+        validateUserId(spo2.getUserId());
+
+        Optional<SPO2> existingSpo2 = spo2Repository.findOneByUserId(spo2.getUserId());
+        String pandanStatus = SPO2Status(spo2.getSpo2data());
+        spo2.setPandan(pandanStatus);
+
+        if(existingSpo2.isPresent()){
+            SPO2 updatedSpo2 = existingSpo2.get();
+            updatedSpo2.setSpo2data(spo2.getSpo2data());
+            updatedSpo2.setPandan(pandanStatus);
+            return spo2Repository.save(updatedSpo2);
+        } else {
+            return spo2Repository.save(spo2);
+        }
+    }
+
     @Override
     public NIBP saveNIBPData(NIBP nibp) {
         validateUserId(nibp.getUserId());
         Optional<NIBP> existingNIBP =nibpRepository.findOneByUserId(nibp.getUserId());
-        String pandanStatus = NIBPStatus(nibp.getNibpdata());
+        String pandanStatus = NIBPStatus(nibp.getSystolic(), nibp.getDiastolic());
         nibp.setPandan(pandanStatus);
 
         if(existingNIBP.isPresent()){
             NIBP updatedNIBP = existingNIBP.get();
-            updatedNIBP.setNibpdata(nibp.getNibpdata());
+            updatedNIBP.setSystolic(nibp.getSystolic());
+            updatedNIBP.setDiastolic(nibp.getDiastolic());
             updatedNIBP.setPandan(pandanStatus);
             return nibpRepository.save(updatedNIBP);
         } else {
             return nibpRepository.save(nibp);
         }
-       //임시로 추가한 부분 return nibpRepository.save(nibp);
-    };
-    /*@Override
-    public List<NIBP> getAllNIBPData(){
-        //  임시로 추가한 부분 return nibpRepository.findAll();
-    };*/
+    }
     // Eog 데이터 저장
     @Override
     public EOG saveEogData(EOG eog) {
@@ -303,21 +321,21 @@ public class HealthDataServiceImpl implements HealthDataService {
     private String BodyTempStatus(float bodydata) {
         if (bodydata >= 36.5 && bodydata <= 37.5) {
             return "정상";
-        } else if (bodydata > 37.5 && bodydata <= 38.0) {
-            return "미열";
-        } else if (bodydata > 38.0) {
-            return "고열";
-        } else if (bodydata < 36.0 && bodydata >= 35.5) {
-            return "체온낮음";
-        } else if (bodydata < 35.5) {
-            return "저체온";
-        } else {
-            return "알 수 없음";
+        }else {
+            return "비정상";
         }
     }
 
-    private String NIBPStatus(float nibpdata) {
-        if (nibpdata >= 100 && nibpdata <= 250) {
+    private String NIBPStatus(int Systolic , int Diastolic) {
+        if (Systolic >= 90 && Systolic <= 120 && Diastolic >= 60 && Diastolic <= 80) {
+            return "정상";
+        } else {
+            return "비정상";
+        }
+    }
+
+    private String SPO2Status (int spo2){
+        if (spo2 >= 95 && spo2 <= 100) {
             return "정상";
         } else {
             return "비정상";

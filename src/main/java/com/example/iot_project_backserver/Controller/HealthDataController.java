@@ -54,6 +54,11 @@ public class HealthDataController {
         return ResponseEntity.ok(healthDataService.saveNIBPData(nibp));
     }
 
+    @PostMapping("/spo2")
+    public ResponseEntity<SPO2> saveSPO2(@RequestBody SPO2 spo2) {
+        return ResponseEntity.ok(healthDataService.saveSPO2(spo2));
+    }
+
     @PostMapping("/eog")
     public ResponseEntity<String> saveECGData(@RequestBody EOG eog) {
         modelDataService.createEOGDataCSV(eog);
