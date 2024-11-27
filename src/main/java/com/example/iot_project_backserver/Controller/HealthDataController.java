@@ -88,7 +88,7 @@ public class HealthDataController {
             // FastAPI로 전송할 JSON 데이터 준비
             Map<String, Object> payload = new HashMap<>();
             System.out.println("유저아이디 표시 부분:" + ecg.getUserId());
-            payload.put("userId", ecg.getUserId()); // FastAPI가 기대하는 필드명
+            payload.put("userid", ecg.getUserId()); // FastAPI가 기대하는 필드명
             payload.put("ecgdata", ecg.getEcgdata()); // FastAPI가 기대하는 필드명
             //System.out.println("json 파일 형식 확인하기 !Payload to FastAPI: " + payload);
 
