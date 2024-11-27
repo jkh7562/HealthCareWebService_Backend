@@ -85,7 +85,7 @@ public class HealthDataController {
         return ResponseEntity.ok("ECG data processed and saved successfully.");
     }*/
 
-    @PostMapping("/ecg")
+    /*@PostMapping("/ecg")
     public ResponseEntity<String> saveECGData(@RequestBody ECG ecg) {
         modelDataService.createECGDataCSV(ecg);
         healthDataService.processAndSaveECGData(ecg);
@@ -137,7 +137,34 @@ public class HealthDataController {
             e.printStackTrace();
             return ResponseEntity.status(500).body("Error processing ECG data");
         }
+    }*/
+    @PostMapping("/ecg")
+    public ResponseEntity<String> saveECGData(@RequestBody ECG ecg) {
+        modelDataService.createECGDataCSV(ecg);
+        healthDataService.processAndSaveECGData(ecg);
+        try {
+            // FastAPI 호출 및 응답 처리
+            Map<String, Object> responseBody = healthDataService.callFastAPIECG(ecg);
+
+            // FastAPI 응답에서 데이터 추출
+            String ecgResult = (String) responseBody.get("ecgresult");
+
+            // ECG_Result 엔터티 생성
+            ECG_Result ecgResultEntity = new ECG_Result();
+            ecgResultEntity.setUserid(ecg.getUserid());
+            ecgResultEntity.setEcgResult(ecgResult);
+            ecgResultEntity.setDate(new Date());
+
+            // 저장 또는 업데이트
+            healthDataService.saveOrUpdateECGResult(ecgResultEntity);
+
+            return ResponseEntity.ok("FastAPI result: " + responseBody);
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Error processing ECG data: " + e.getMessage());
+        }
     }
+
 
 
 

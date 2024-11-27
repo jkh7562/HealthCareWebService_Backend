@@ -4,11 +4,14 @@ import com.example.iot_project_backserver.entity.*;
 import com.example.iot_project_backserver.exception.CustomException;
 import com.example.iot_project_backserver.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -302,6 +305,39 @@ public class HealthDataServiceImpl implements HealthDataService {
         }
     }
 
+    @Override
+    public Map<String, Object> callFastAPIECG(ECG ecg){
+        validateUserid(ecg.getUserid());
+        try {
+            // FastAPI로 전송할 JSON 데이터 준비
+            Map<String, Object> payload = new HashMap<>();
+            payload.put("userid", ecg.getUserid());
+            payload.put("ecgdata", ecg.getEcgdata());
+
+            // FastAPI 서버 URL
+            String fastApiUrl = "http://127.0.0.1:8082/predict";
+
+            // RestTemplate 생성 및 JSON Content-Type 설정
+            RestTemplate restTemplate = new RestTemplate();
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            HttpEntity<Map<String, Object>> request = new HttpEntity<>(payload, headers);
+
+            // POST 요청 전송
+            ResponseEntity<Map> response = restTemplate.postForEntity(fastApiUrl, request, Map.class);
+
+            // FastAPI의 응답 처리
+            if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+                return response.getBody();
+            } else {
+                throw new RuntimeException("FastAPI call failed with status: " + response.getStatusCode());
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Error calling FastAPI", e);
+        }
+    }
+
+
 
 
 
@@ -367,8 +403,8 @@ public class HealthDataServiceImpl implements HealthDataService {
         }
     }
 
-    @Override //모델에서 받은 결과 데이터 저장
+/*    @Override //모델에서 받은 결과 데이터 저장
     public ECG_Result saveECGResult(ECG_Result ecgResult) {
         return ecgResultRepository.save(ecgResult);
-    }
+    }*/
 }
