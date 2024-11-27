@@ -3,13 +3,18 @@ package com.example.iot_project_backserver.Controller;
 import com.example.iot_project_backserver.entity.*;
 import com.example.iot_project_backserver.service.HealthDataService;
 import com.example.iot_project_backserver.service.ModelDataService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import com.example.iot_project_backserver.service.ModelData;
+import org.springframework.web.client.RestTemplate;
 
 @Controller
 @RestController
@@ -70,12 +75,53 @@ public class HealthDataController {
     public ResponseEntity<List<EOG>> getAllEogData() {return ResponseEntity.ok(healthDataService.getAllEogData());
     }
 
-    @PostMapping("/ecg")
+    /*@PostMapping("/ecg")
     public ResponseEntity<String> saveECGData(@RequestBody ECG ecg) {
         modelDataService.createECGDataCSV(ecg);
         healthDataService.processAndSaveECGData(ecg);
         return ResponseEntity.ok("ECG data processed and saved successfully.");
+    }*/
+
+    @PostMapping("/ecg")
+    public ResponseEntity<String> saveECGData(@RequestBody ECG ecg) {
+        try {
+            // FastAPI로 전송할 JSON 데이터 준비
+            Map<String, Object> payload = new HashMap<>();
+            System.out.println("유저아이디 표시 부분:" + ecg.getUserId());
+            payload.put("userId", ecg.getUserId()); // FastAPI가 기대하는 필드명
+            payload.put("ecgdata", ecg.getEcgdata()); // FastAPI가 기대하는 필드명
+            //System.out.println("json 파일 형식 확인하기 !Payload to FastAPI: " + payload);
+
+            // FastAPI 서버 URL
+            String fastApiUrl = "http://127.0.0.1:8082/predict";
+
+            // RestTemplate 생성 및 JSON Content-Type 설정
+            RestTemplate restTemplate = new RestTemplate();
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+
+            // 요청 바디 생성
+            HttpEntity<Map<String, Object>> request = new HttpEntity<>(payload, headers);
+
+            // POST 요청 전송
+            ResponseEntity<Map> response = restTemplate.postForEntity(fastApiUrl, request, Map.class);
+
+            // FastAPI의 응답 처리
+            if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+                // FastAPI 응답 출력
+                System.out.println("FastAPI Response: " + response.getBody());
+                return ResponseEntity.ok("FastAPI result: " + response.getBody());
+            } else {
+                System.out.println("FastAPI call failed: " + response.getStatusCode());
+                return ResponseEntity.status(response.getStatusCode()).body("FastAPI call failed");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Error processing ECG data");
+        }
     }
+
+
 
     @PostMapping("/emg")
     public ResponseEntity<String> saveEMGData(@RequestBody EMG emg) {

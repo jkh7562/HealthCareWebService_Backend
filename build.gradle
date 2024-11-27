@@ -34,6 +34,8 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
 
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
+
     //TODO 임시 DB 사용 -> 테스트후 제거 요망
     implementation 'com.h2database:h2'
 

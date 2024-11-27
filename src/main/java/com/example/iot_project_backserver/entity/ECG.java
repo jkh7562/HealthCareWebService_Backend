@@ -15,6 +15,7 @@ public class ECG {
         @GeneratedValue(strategy = GenerationType.IDENTITY) // 기본키 생성
         private Long id;
 
+        @Column(name = "userId")
         private String userId; // 사용자 ID
 
         @ElementCollection
