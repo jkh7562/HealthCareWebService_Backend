@@ -31,6 +31,8 @@ public class HealthDataServiceImpl implements HealthDataService {
     private final NIBPRepository nibpRepository;
     private final Spo2Repository spo2Repository;
 
+    private final BodyTemp_ResultRepository bodyTempResultRepository;
+    private final NIBP_ResultRepository nibpResultRepository;
     private final ECG_ResultRepository ecgResultRepository;
 
 
@@ -44,6 +46,8 @@ public class HealthDataServiceImpl implements HealthDataService {
                                  NIBPRepository nibpRepository,
                                  Spo2Repository spo2Repository,
                                  ECG_ResultRepository ecgResultRepository,
+                                 BodyTemp_ResultRepository bodyTempResultRepository,
+                                 NIBP_ResultRepository nibpResultRepository,
                                  UserRepository userRepository) {
         this.airflowRepository = airflowRepository;
         this.bodyTempRepository = bodyTempRepository;
@@ -54,6 +58,8 @@ public class HealthDataServiceImpl implements HealthDataService {
         this.nibpRepository = nibpRepository;
         this.spo2Repository = spo2Repository;
         this.ecgResultRepository = ecgResultRepository;
+        this.bodyTempResultRepository = bodyTempResultRepository;
+        this.nibpResultRepository = nibpResultRepository;
         this.userRepository = userRepository;
     }
 
@@ -132,6 +138,33 @@ public class HealthDataServiceImpl implements HealthDataService {
             return bodyTempRepository.save(bodyTemp);
         }
     }
+    @Override
+    public void saveOrUpdateBodyTempResult(BodyTemp bodyTemp) {
+        validateUserid(bodyTemp.getUserid());
+
+        // BodyTemp 상태를 판단
+        String status = BodyTempStatus(bodyTemp.getTempdata());
+
+        // 동일한 사용자 ID와 날짜가 있는 데이터 검색
+        Optional<BodyTemp_Result> existingResult = bodyTempResultRepository.findByUseridAndDate(bodyTemp.getUserid(), new Date());
+
+        if (existingResult.isPresent()) {
+            // 기존 데이터가 있으면 업데이트
+            BodyTemp_Result resultToUpdate = existingResult.get();
+            resultToUpdate.setBodyTempResult(status);
+            bodyTempResultRepository.save(resultToUpdate);
+            System.out.println("Updated record for userid: " + bodyTemp.getUserid() + ", date: " + resultToUpdate.getDate());
+        } else {
+            // 기존 데이터가 없으면 새로 저장
+            BodyTemp_Result newResult = new BodyTemp_Result();
+            newResult.setUserid(bodyTemp.getUserid());
+            newResult.setBodyTempResult(status);
+            newResult.setDate(new Date());
+            bodyTempResultRepository.save(newResult);
+            System.out.println("Saved new record for userid: " + bodyTemp.getUserid() + ", date: " + newResult.getDate());
+        }
+    }
+
 
     //spo2 데이터 저장
     @Override
@@ -169,6 +202,38 @@ public class HealthDataServiceImpl implements HealthDataService {
             return nibpRepository.save(nibp);
         }
     }
+
+    //NIBP_Result 데이터 저장
+    @Override
+    public void saveOrUpdateNIBPResult(NIBP nibp) {
+        validateUserid(nibp.getUserid());
+
+        // NIBP 상태를 판단
+        String status = NIBPStatus(nibp.getSystolic(),nibp.getDiastolic());
+
+        // 동일한 사용자 ID와 날짜가 있는 데이터 검색
+        Optional<NIBP_Result> existingResult = nibpResultRepository.findByUseridAndDate(nibp.getUserid(), new Date());
+
+        if (existingResult.isPresent()) {
+            // 기존 데이터가 있으면 업데이트
+            NIBP_Result resultToUpdate = existingResult.get();
+            resultToUpdate.setNIBPResult(status);
+            nibpResultRepository.save(resultToUpdate);
+            System.out.println("Updated record for userid: " + nibp.getUserid() + ", date: " + resultToUpdate.getDate());
+        } else {
+            // 기존 데이터가 없으면 새로 저장
+            NIBP_Result newResult = new NIBP_Result();
+            newResult.setUserid(nibp.getUserid());
+            newResult.setNIBPResult(status);
+            newResult.setDate(new Date());
+            nibpResultRepository.save(newResult);
+            System.out.println("Saved new record for userid: " + nibp.getUserid() + ", date: " + newResult.getDate());
+        }
+    }
+
+
+
+
     // Eog 데이터 저장
     @Override
     public EOG saveEogData(EOG eog) {
@@ -403,8 +468,4 @@ public class HealthDataServiceImpl implements HealthDataService {
         }
     }
 
-/*    @Override //모델에서 받은 결과 데이터 저장
-    public ECG_Result saveECGResult(ECG_Result ecgResult) {
-        return ecgResultRepository.save(ecgResult);
-    }*/
 }

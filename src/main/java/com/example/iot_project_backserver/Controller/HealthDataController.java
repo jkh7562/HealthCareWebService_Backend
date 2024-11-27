@@ -47,19 +47,62 @@ public class HealthDataController {
         return ResponseEntity.ok(healthDataService.getAllAirflowData());
     }
 
-    @PostMapping("/bodytemp")
+    /*@PostMapping("/bodytemp")
     public ResponseEntity<BodyTemp> saveBodyTemp(@RequestBody BodyTemp bodyTemp) {
         return ResponseEntity.ok(healthDataService.saveBodyTempData(bodyTemp));
+    }*/
+    /*@PostMapping("/bodytemp")
+    public ResponseEntity<String> saveBodyTemp(@RequestBody BodyTemp bodyTemp) {
+        try {
+            healthDataService.saveOrUpdateBodyTempResult(bodyTemp);
+            return ResponseEntity.ok("Body temperature data processed and saved successfully.");
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Error processing BodyTemp data: " + e.getMessage());
+        }
+    }*/
+    @PostMapping("/bodytemp")
+    public ResponseEntity<String> saveBodyTemp(@RequestBody BodyTemp bodyTemp) {
+        try {
+            // BodyTemp 테이블에 데이터 저장
+            healthDataService.saveBodyTempData(bodyTemp);
+
+            // BodyTemp_Result 테이블에 데이터 저장 또는 업데이트
+            healthDataService.saveOrUpdateBodyTempResult(bodyTemp);
+
+            return ResponseEntity.ok("Body temperature data processed and saved successfully.");
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Error processing BodyTemp data: " + e.getMessage());
+        }
     }
+
+
 
     @GetMapping("/bodytemp")
     public ResponseEntity<List<BodyTemp>> getAllBodyTempData() {
         return ResponseEntity.ok(healthDataService.getAllBodyTempData());
     }
 
-    @PostMapping("/nibp")
+    /*@PostMapping("/nibp")
     public ResponseEntity<NIBP> saveNIBP(@RequestBody NIBP nibp) {
         return ResponseEntity.ok(healthDataService.saveNIBPData(nibp));
+    }*/
+
+    @PostMapping("/nibp")
+    public ResponseEntity<String> saveNIBP(@RequestBody NIBP nibp) {
+        try {
+            // BodyTemp 테이블에 데이터 저장
+            healthDataService.saveNIBPData(nibp);
+
+            // BodyTemp_Result 테이블에 데이터 저장 또는 업데이트
+            healthDataService.saveOrUpdateNIBPResult(nibp);
+
+            return ResponseEntity.ok("NIBP data processed and saved successfully.");
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Error processing NIBP data: " + e.getMessage());
+        }
     }
 
     @PostMapping("/spo2")

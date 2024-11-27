@@ -14,10 +14,12 @@ public interface HealthDataService {
     //BodyTemp
     BodyTemp saveBodyTempData(BodyTemp bodyTemp);
     List<BodyTemp> getAllBodyTempData();
+    void saveOrUpdateBodyTempResult(BodyTemp bodyTemp);
 
     //NIBP
     NIBP saveNIBPData(NIBP nibp);
     //List<NIBP> getAllNIBPData();
+    void saveOrUpdateNIBPResult(NIBP nibp);
 
     // Eog 관련 메서드
     EOG saveEogData(EOG eog);
