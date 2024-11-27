@@ -18,10 +18,6 @@ public class ModelDataServiceServiceImpl implements ModelDataService {
         this.ecgResultRepository = ecgResultRepository;
     }
 
-    @Override //모델에서 받은 결과 데이터 저장
-    public ECG_Result saveECGResult(ECG_Result ecgResult) {
-        return ecgResultRepository.save(ecgResult);
-    }
 
     @Override
     public void createECGDataCSV(ECG ecg) {

@@ -28,6 +28,8 @@ public class HealthDataServiceImpl implements HealthDataService {
     private final NIBPRepository nibpRepository;
     private final Spo2Repository spo2Repository;
 
+    private final ECG_ResultRepository ecgResultRepository;
+
 
     @Autowired
     public HealthDataServiceImpl(AirflowRepository airflowRepository,
@@ -38,6 +40,7 @@ public class HealthDataServiceImpl implements HealthDataService {
                                  GsrRepository gsrRepository,
                                  NIBPRepository nibpRepository,
                                  Spo2Repository spo2Repository,
+                                 ECG_ResultRepository ecgResultRepository,
                                  UserRepository userRepository) {
         this.airflowRepository = airflowRepository;
         this.bodyTempRepository = bodyTempRepository;
@@ -47,6 +50,7 @@ public class HealthDataServiceImpl implements HealthDataService {
         this.gsrRepository = gsrRepository;
         this.nibpRepository = nibpRepository;
         this.spo2Repository = spo2Repository;
+        this.ecgResultRepository = ecgResultRepository;
         this.userRepository = userRepository;
     }
 
@@ -278,6 +282,29 @@ public class HealthDataServiceImpl implements HealthDataService {
         return airflowRepository.findAll();
     }
 
+    
+    //ECG 판단 데이터 저장
+    @Override
+    public void saveOrUpdateECGResult(ECG_Result ecgResult) {
+        // 동일한 사용자 ID와 날짜가 있는 데이터 검색
+        Optional<ECG_Result> existingResult = ecgResultRepository.findByUseridAndDate(ecgResult.getUserid(), ecgResult.getDate());
+
+        if (existingResult.isPresent()) {
+            // 기존 데이터가 있으면 업데이트
+            ECG_Result resultToUpdate = existingResult.get();
+            resultToUpdate.setEcgResult(ecgResult.getEcgResult());
+            ecgResultRepository.save(resultToUpdate);
+            System.out.println("Updated record for userid:" + ecgResult.getUserid() + ", date: " + ecgResult.getDate());
+        } else {
+            // 기존 데이터가 없으면 새로 저장
+            ecgResultRepository.save(ecgResult);
+            System.out.println("Saved new record for userid:" + ecgResult.getUserid() + ", date: " + ecgResult.getDate());
+        }
+    }
+
+
+
+
     // ID 유효성 검사
     private void validateUserid(String userid) {
         if (!userRepository.existsByUserid(userid)) {
@@ -322,6 +349,7 @@ public class HealthDataServiceImpl implements HealthDataService {
         }
     }
 
+    //NIBP 상태 판단
     private String NIBPStatus(int Systolic , int Diastolic) {
         if (Systolic >= 90 && Systolic <= 120 && Diastolic >= 60 && Diastolic <= 80) {
             return "정상";
@@ -330,11 +358,17 @@ public class HealthDataServiceImpl implements HealthDataService {
         }
     }
 
+    //SPO2 상태 판단
     private String SPO2Status (int spo2){
         if (spo2 >= 95 && spo2 <= 100) {
             return "정상";
         } else {
             return "비정상";
         }
+    }
+
+    @Override //모델에서 받은 결과 데이터 저장
+    public ECG_Result saveECGResult(ECG_Result ecgResult) {
+        return ecgResultRepository.save(ecgResult);
     }
 }

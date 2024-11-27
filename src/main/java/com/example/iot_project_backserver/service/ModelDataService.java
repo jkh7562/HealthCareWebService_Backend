@@ -8,5 +8,5 @@ public interface ModelDataService {
     void createEOGDataCSV(EOG eog);
     void createEMGDataCSV(EMG emg);
     void createGSRDataCSV(GSR gsr);
-    ECG_Result saveECGResult(ECG_Result ecgResult);
+    //ECG_Result saveECGResult(ECG_Result ecgResult);
 }

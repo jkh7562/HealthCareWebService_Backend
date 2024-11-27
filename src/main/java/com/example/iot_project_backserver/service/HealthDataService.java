@@ -33,6 +33,9 @@ public interface HealthDataService {
     void processAndSaveAirflowData(Airflow airflow);
     void processAndSaveEMGData(EMG emg);
     void processAndSaveEOGData(EOG eog);
+
+    ECG_Result saveECGResult(ECG_Result ecgResult);
+    void saveOrUpdateECGResult(ECG_Result ecgResult);
 }
 
 

@@ -87,6 +87,8 @@ public class HealthDataController {
 
     @PostMapping("/ecg")
     public ResponseEntity<String> saveECGData(@RequestBody ECG ecg) {
+        modelDataService.createECGDataCSV(ecg);
+        healthDataService.processAndSaveECGData(ecg);
         try {
             // FastAPI로 전송할 JSON 데이터 준비
             Map<String, Object> payload = new HashMap<>();
@@ -102,7 +104,6 @@ public class HealthDataController {
             RestTemplate restTemplate = new RestTemplate();
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
-
             // 요청 바디 생성
             HttpEntity<Map<String, Object>> request = new HttpEntity<>(payload, headers);
 
@@ -116,6 +117,7 @@ public class HealthDataController {
                 // 응답결과 저장하기
                 Map<String, Object> responseBody = response.getBody();
                 //ecg 결과 추출하기
+                String userid = (String) responseBody.get("userid");
                 String ecgResult = (String) responseBody.get("ecgresult");
                 System.out.println("FastAPI Response: " + ecgResult);
                 //ECG_Result 엔티티에 저장
@@ -124,7 +126,7 @@ public class HealthDataController {
                 ecgresult.setEcgResult(ecgResult);
                 ecgresult.setDate(new Date());
 
-                modelDataService.saveECGResult(ecgresult);
+                healthDataService.saveOrUpdateECGResult(ecgresult);
 
                 return ResponseEntity.ok("FastAPI result: " + response.getBody());
             } else {
@@ -136,6 +138,7 @@ public class HealthDataController {
             return ResponseEntity.status(500).body("Error processing ECG data");
         }
     }
+
 
 
 
