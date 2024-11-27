@@ -2,12 +2,14 @@ package com.example.iot_project_backserver.Controller;
 
 import com.example.iot_project_backserver.entity.*;
 import com.example.iot_project_backserver.service.HealthDataService;
+import com.example.iot_project_backserver.service.ModelDataService;
 import com.example.iot_project_backserver.service.ModelDataServiceServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,11 +22,14 @@ import org.springframework.web.client.RestTemplate;
 public class HealthDataController {
 
     private final HealthDataService healthDataService;
+    private final ModelDataService modelDataService;
     //임시 데이터 위함
 
     @Autowired
-    public HealthDataController(HealthDataService healthDataService) {
+    public HealthDataController(HealthDataService healthDataService,
+                                ModelDataService modelDataService) {
         this.healthDataService = healthDataService;
+        this.modelDataService = modelDataService;
     }
 
     @Autowired
@@ -85,7 +90,7 @@ public class HealthDataController {
         try {
             // FastAPI로 전송할 JSON 데이터 준비
             Map<String, Object> payload = new HashMap<>();
-            System.out.println("유저아이디 표시 부분:" + ecg.getUserid());
+            //System.out.println("유저아이디 표시 부분:" + ecg.getUserid());
             payload.put("userid", ecg.getUserid()); // FastAPI가 기대하는 필드명
             payload.put("ecgdata", ecg.getEcgdata()); // FastAPI가 기대하는 필드명
             //System.out.println("json 파일 형식 확인하기 !Payload to FastAPI: " + payload);
@@ -108,6 +113,19 @@ public class HealthDataController {
             if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
                 // FastAPI 응답 출력
                 System.out.println("FastAPI Response: " + response.getBody());
+                // 응답결과 저장하기
+                Map<String, Object> responseBody = response.getBody();
+                //ecg 결과 추출하기
+                String ecgResult = (String) responseBody.get("ecgresult");
+                System.out.println("FastAPI Response: " + ecgResult);
+                //ECG_Result 엔티티에 저장
+                ECG_Result ecgresult = new ECG_Result();
+                ecgresult.setUserid(ecg.getUserid());
+                ecgresult.setEcgResult(ecgResult);
+                ecgresult.setDate(new Date());
+
+                modelDataService.saveECGResult(ecgresult);
+
                 return ResponseEntity.ok("FastAPI result: " + response.getBody());
             } else {
                 System.out.println("FastAPI call failed: " + response.getStatusCode());
