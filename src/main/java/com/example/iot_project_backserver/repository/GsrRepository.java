@@ -4,5 +4,5 @@ import com.example.iot_project_backserver.entity.GSR;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface GsrRepository extends JpaRepository<GSR, Long>, HealthDataRepository<GSR>{
-    boolean existsByUserId(String userId);
+    boolean existsByUserid(String userid);
 }

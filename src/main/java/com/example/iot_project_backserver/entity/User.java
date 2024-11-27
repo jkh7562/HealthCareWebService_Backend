@@ -13,8 +13,8 @@ import java.util.Date;
 public class User {
 
     @Id
-    @Column(name = "user_id", length = 255) // VARCHAR(255)
-    private String userId; // 사용자 ID, PRIMARY KEY
+    @Column(name = "userid", length = 255) // VARCHAR(255)
+    private String userid; // 사용자 ID, PRIMARY KEY
 
     @Column(name = "password", length = 255, nullable = false) // NOT NULL
     private String password; // 비밀번호

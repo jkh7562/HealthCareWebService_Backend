@@ -2,8 +2,7 @@ package com.example.iot_project_backserver.Controller;
 
 import com.example.iot_project_backserver.entity.*;
 import com.example.iot_project_backserver.service.HealthDataService;
-import com.example.iot_project_backserver.service.ModelDataService;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.example.iot_project_backserver.service.ModelDataServiceServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
@@ -13,7 +12,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.example.iot_project_backserver.service.ModelData;
 import org.springframework.web.client.RestTemplate;
 
 @Controller
@@ -30,11 +28,11 @@ public class HealthDataController {
     }
 
     @Autowired
-    public ModelDataService modelDataService;
+    public ModelDataServiceServiceImpl modelDataServiceImpl;
 
     @PostMapping("/airflow")
     public ResponseEntity<String> saveAirflow(@RequestBody Airflow airflow) { //TODO 이후 valid 이용해서 검증 기증 추가하기
-        modelDataService.createAirflowDataCSV(airflow);
+        modelDataServiceImpl.createAirflowDataCSV(airflow);
         healthDataService.processAndSaveAirflowData(airflow);
         return ResponseEntity.ok("Airflow data processed and saved successfully.");
     }
@@ -66,7 +64,7 @@ public class HealthDataController {
 
     @PostMapping("/eog")
     public ResponseEntity<String> saveECGData(@RequestBody EOG eog) {
-        modelDataService.createEOGDataCSV(eog);
+        modelDataServiceImpl.createEOGDataCSV(eog);
         healthDataService.processAndSaveEOGData(eog);
         return ResponseEntity.ok("EOG data processed and saved successfully.");
     }
@@ -87,8 +85,8 @@ public class HealthDataController {
         try {
             // FastAPI로 전송할 JSON 데이터 준비
             Map<String, Object> payload = new HashMap<>();
-            System.out.println("유저아이디 표시 부분:" + ecg.getUserId());
-            payload.put("userid", ecg.getUserId()); // FastAPI가 기대하는 필드명
+            System.out.println("유저아이디 표시 부분:" + ecg.getUserid());
+            payload.put("userid", ecg.getUserid()); // FastAPI가 기대하는 필드명
             payload.put("ecgdata", ecg.getEcgdata()); // FastAPI가 기대하는 필드명
             //System.out.println("json 파일 형식 확인하기 !Payload to FastAPI: " + payload);
 
@@ -125,14 +123,14 @@ public class HealthDataController {
 
     @PostMapping("/emg")
     public ResponseEntity<String> saveEMGData(@RequestBody EMG emg) {
-        modelDataService.createEMGDataCSV(emg);
+        modelDataServiceImpl.createEMGDataCSV(emg);
         healthDataService.processAndSaveEMGData(emg);
         return ResponseEntity.ok("EMG data processed and saved successfully.");
     }
 
     @PostMapping("/gsr")
     public ResponseEntity<String> saveGSRData(@RequestBody GSR gsr) {
-        modelDataService.createGSRDataCSV(gsr);
+        modelDataServiceImpl.createGSRDataCSV(gsr);
         healthDataService.processAndSaveGSRData(gsr);
         return ResponseEntity.ok("GSR data processed and saved successfully.");
     }

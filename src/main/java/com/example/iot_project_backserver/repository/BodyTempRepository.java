@@ -10,9 +10,9 @@ import java.util.Optional;
 // BodyTemp 엔티티를 위한 리포지토리
 public interface BodyTempRepository extends JpaRepository<BodyTemp, Long>,HealthDataRepository<BodyTemp> {
     // BodyTemp 관련 쿼리 메서드 추가 가능
-    boolean existsByUserId(String userId);
+    boolean existsByUserid(String userid);
 
 
-    //List<BodyTemp> findByUserIdAndCreatedAt(String userId, LocalDate createdAt);
+    //List<BodyTemp> findByUseridAndCreatedAt(String userid, LocalDate createdAt);
 
 }

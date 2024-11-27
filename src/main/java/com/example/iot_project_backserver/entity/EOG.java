@@ -15,7 +15,7 @@ public class EOG {
     @GeneratedValue(strategy = GenerationType.IDENTITY) // 기본키 생성
     private Long id;
 
-    private String userId; // 사용자 ID
+    private String userid; // 사용자 ID
 
     @ElementCollection
     @CollectionTable(name = "eog_eogdata", joinColumns = @JoinColumn(name = "eog_id"))

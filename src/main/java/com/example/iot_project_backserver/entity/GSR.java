@@ -15,7 +15,7 @@ public class GSR {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String userId;
+    private String userid;
 
     @ElementCollection
     @CollectionTable(name = "gsr_gsrdata", joinColumns = @JoinColumn(name = "gsr_id"))

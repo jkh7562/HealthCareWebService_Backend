@@ -8,6 +8,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class GsrAverage {
-    private Float averageValue;
-    private String userId;
+    private Float GsrAverageValue;
+    private String userid;
 }

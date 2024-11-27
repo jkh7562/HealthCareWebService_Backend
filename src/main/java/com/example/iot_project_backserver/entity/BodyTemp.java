@@ -18,7 +18,7 @@ public class BodyTemp {
     @GeneratedValue(strategy = GenerationType.IDENTITY) // 기본키 생성
     private Long id; //TODO 사용자 ID를 기본키로 사용하려면 수정 필요
 
-    private String userId;// 사용자 ID
+    private String userid;// 사용자 ID
 
     @JsonProperty("tempdata")
     private float tempdata; // JSON에서 문자열도 변환 가능하게 설정

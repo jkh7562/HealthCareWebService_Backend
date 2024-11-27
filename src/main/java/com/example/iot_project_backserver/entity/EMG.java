@@ -15,7 +15,7 @@ public class EMG {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String userId;
+    private String userid;
 
     @ElementCollection
     @CollectionTable(name = "emg_emgdata", joinColumns = @JoinColumn(name = "emg_id"))

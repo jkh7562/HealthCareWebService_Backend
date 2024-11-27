@@ -8,6 +8,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class EmgAverage {
-    private Float averageValue;
-    private String userId;
+    private Float EmgAverageValue;
+    private String userid;
 }

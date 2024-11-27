@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface NIBPRepository extends JpaRepository<NIBP, Long>, HealthDataRepository<NIBP> {
-    boolean existsByUserId(String userId);
+    boolean existsByUserid(String userid);
 
 }

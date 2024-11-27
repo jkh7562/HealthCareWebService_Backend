@@ -15,7 +15,7 @@ public class Airflow {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String userId;
+    private String userid;
 
     @ElementCollection
     @CollectionTable(name = "airflow_airflowdata", joinColumns = @JoinColumn(name = "airflow_id"))

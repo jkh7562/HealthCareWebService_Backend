@@ -52,7 +52,7 @@ public class HealthDataServiceImpl implements HealthDataService {
 
     // 공통 처리 로직: 제네릭 메서드로 구현  리스트 형식 데이터 처리 윟마
     private <T, A> void processAndSaveData(
-            String userId,
+            String userid,
             T data,
             int groupSize,
             Function<List<Float>, List<A>> averageConverter,
@@ -61,7 +61,7 @@ public class HealthDataServiceImpl implements HealthDataService {
             Supplier<Optional<T>> existingDataSupplier) {
 
         // 사용자 ID 검증
-        validateUserId(userId);
+        validateUserid(userid);
 
         // 데이터 리스트 가져오기
         List<Float> dataList = getDataList(data);
@@ -90,32 +90,28 @@ public class HealthDataServiceImpl implements HealthDataService {
     @Override
     public void processAndSaveECGData(ECG ecg) {
         processAndSaveData(
-                ecg.getUserId(),
+                ecg.getUserid(),
                 ecg,
                 250, // 그룹 크기
                 averages -> averages.stream()
                         .map(avg -> {
                             EcgAverage ecgAverage = new EcgAverage();
-                            ecgAverage.setAverageValue(avg);
-                            ecgAverage.setUserId(ecg.getUserId());
+                            ecgAverage.setEcgAverageValue(avg);
+                            ecgAverage.setUserid(ecg.getUserid());
                             return ecgAverage;
                         })
                         .collect(Collectors.toList()),
                 ECG::setAverages,
                 ecgRepository::save,
-                () -> ecgRepository.findOneByUserId(ecg.getUserId())
+                () -> ecgRepository.findOneByUserid(ecg.getUserid())
         );
     }
 
     @Override
     public BodyTemp saveBodyTempData(BodyTemp bodyTemp) {
-        // 사용자 ID가 유효한지 확인
-        /*if (!userRepository.existsByUserId(bodyTemp.getUserId())) {
-            throw new CustomException("유효하지 않은 사용자 ID입니다."); // 유효하지 않은 ID일 경우 보낼 예외 메시지
-        }*/
-        validateUserId(bodyTemp.getUserId());
+        validateUserid(bodyTemp.getUserid());
 
-        Optional<BodyTemp> existingBodyTemp = bodyTempRepository.findOneByUserId(bodyTemp.getUserId());
+        Optional<BodyTemp> existingBodyTemp = bodyTempRepository.findOneByUserid(bodyTemp.getUserid());
         //TODO 데이터를 바로 저장하는 것이 아닌 데이터의 수치 판단이 필요
         String pandanStatus = BodyTempStatus(bodyTemp.getTempdata());
         bodyTemp.setPandan(pandanStatus);
@@ -133,9 +129,9 @@ public class HealthDataServiceImpl implements HealthDataService {
     //spo2 데이터 저장
     @Override
     public SPO2 saveSPO2(SPO2 spo2) {
-        validateUserId(spo2.getUserId());
+        validateUserid(spo2.getUserid());
 
-        Optional<SPO2> existingSpo2 = spo2Repository.findOneByUserId(spo2.getUserId());
+        Optional<SPO2> existingSpo2 = spo2Repository.findOneByUserid(spo2.getUserid());
         String pandanStatus = SPO2Status(spo2.getSpo2data());
         spo2.setPandan(pandanStatus);
 
@@ -151,8 +147,8 @@ public class HealthDataServiceImpl implements HealthDataService {
 
     @Override
     public NIBP saveNIBPData(NIBP nibp) {
-        validateUserId(nibp.getUserId());
-        Optional<NIBP> existingNIBP =nibpRepository.findOneByUserId(nibp.getUserId());
+        validateUserid(nibp.getUserid());
+        Optional<NIBP> existingNIBP =nibpRepository.findOneByUserid(nibp.getUserid());
         String pandanStatus = NIBPStatus(nibp.getSystolic(), nibp.getDiastolic());
         nibp.setPandan(pandanStatus);
 
@@ -169,74 +165,74 @@ public class HealthDataServiceImpl implements HealthDataService {
     // Eog 데이터 저장
     @Override
     public EOG saveEogData(EOG eog) {
-        validateUserId(eog.getUserId());
+        validateUserid(eog.getUserid());
         return eogRepository.save(eog);
     }
 
     // Airflow 데이터 저장
     @Override
     public Airflow saveAirflow(Airflow airflow) {
-        validateUserId(airflow.getUserId());
+        validateUserid(airflow.getUserid());
         return airflowRepository.save(airflow);
     }
 
     @Override
     public void processAndSaveAirflowData(Airflow airflow) {
         processAndSaveData(
-                airflow.getUserId(),
+                airflow.getUserid(),
                 airflow,
                 250, // 그룹 크기
                 averages -> averages.stream()
                         .map(avg -> {
                             AirflowAverage airAverage = new AirflowAverage(); // 올바른 클래스 이름
                             airAverage.setAverageValue(avg);
-                            airAverage.setUserId(airflow.getUserId());
+                            airAverage.setUserid(airflow.getUserid());
                             return airAverage;
                         })
                         .collect(Collectors.toList()), // 평균 리스트 생성
                 Airflow::setAverages, // 올바른 메서드 참조
                 airflowRepository::save, // 저장 메서드 참조
-                () -> airflowRepository.findOneByUserId(airflow.getUserId()) // 기존 데이터 확인
+                () -> airflowRepository.findOneByUserid(airflow.getUserid()) // 기존 데이터 확인
         );
     }
 
     @Override
     public void processAndSaveEOGData(EOG eog) {
         processAndSaveData(
-                eog.getUserId(),
+                eog.getUserid(),
                 eog,
                 250,
                 averages -> averages.stream()
                         .map(avg -> {
                             EogAverage eogAverage = new EogAverage();
                             eogAverage.setAverageValue(avg);
-                            eogAverage.setUserId(eog.getUserId());
+                            eogAverage.setUserid(eog.getUserid());
                             return eogAverage;
                         })
                         .collect(Collectors.toList()),
                 EOG::setAverages,
                 eogRepository::save,
-                () -> eogRepository.findOneByUserId(eog.getUserId())
+                () -> eogRepository.findOneByUserid(eog.getUserid())
         );
     }
 
     @Override
     public void processAndSaveEMGData(EMG emg) {
         processAndSaveData(
-                emg.getUserId(),
+                emg.getUserid(),
                 emg,
                 250,
                 averages -> averages.stream()
                         .map(avg -> {
                             EmgAverage emgAverage = new EmgAverage();
-                            emgAverage.setAverageValue(avg);
-                            emgAverage.setUserId(emg.getUserId());
+                            emgAverage.setEmgAverageValue(avg);
+                            emgAverage.setUserid(emg.getUserid());
                             return emgAverage;
                         })
                         .collect(Collectors.toList()),
                 EMG::setAverages,
                 emgRepository::save,
-                () -> emgRepository.findOneByUserId(emg.getUserId())
+                () -> emgRepository.findOneByUserid(emg.getUserid())
         );
     }
 
@@ -244,20 +240,20 @@ public class HealthDataServiceImpl implements HealthDataService {
     @Override
     public void processAndSaveGSRData(GSR gsr) {
         processAndSaveData(
-                gsr.getUserId(),
+                gsr.getUserid(),
                 gsr,
                 250,
                 averages -> averages.stream()
                         .map(avg -> {
                             GsrAverage gsrAverage = new GsrAverage();
-                            gsrAverage.setAverageValue(avg);
-                            gsrAverage.setUserId(gsr.getUserId());
+                            gsrAverage.setGsrAverageValue(avg);
+                            gsrAverage.setUserid(gsr.getUserid());
                             return gsrAverage;
                         })
                         .collect(Collectors.toList()),
                 GSR::setAverages,
                 gsrRepository::save,
-                () -> gsrRepository.findOneByUserId(gsr.getUserId())
+                () -> gsrRepository.findOneByUserid(gsr.getUserid())
         );
     }
 
@@ -283,8 +279,8 @@ public class HealthDataServiceImpl implements HealthDataService {
     }
 
     // ID 유효성 검사
-    private void validateUserId(String userId) {
-        if (!userRepository.existsByUserId(userId)) {
+    private void validateUserid(String userid) {
+        if (!userRepository.existsByUserid(userid)) {
             throw new CustomException("유효하지 않은 사용자 ID입니다.");
         }
     }

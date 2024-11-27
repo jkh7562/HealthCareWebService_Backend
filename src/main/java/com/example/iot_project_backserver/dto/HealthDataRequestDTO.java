@@ -10,7 +10,7 @@ import java.util.List;
 @Setter
 public class HealthDataRequestDTO {
 
-    private String userId;
+    private String userid;
     private List<Float> BodyTemp;
 
 
