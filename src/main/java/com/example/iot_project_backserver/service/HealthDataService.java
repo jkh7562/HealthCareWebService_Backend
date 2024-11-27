@@ -26,7 +26,8 @@ public interface HealthDataService {
     List<EOG> getAllEogData();
 
     //SPO2 관련 메서드
-    SPO2 saveSPO2(SPO2 spo2);
+    SPO2 saveSPO2Data(SPO2 spo2);
+    void saveOrUpdateSPO2Result(SPO2 spo2);
 
     //ECG 관련 메서드
     //ECG saveECGData(ECG ecg); //ECG 데이터 저장 하기

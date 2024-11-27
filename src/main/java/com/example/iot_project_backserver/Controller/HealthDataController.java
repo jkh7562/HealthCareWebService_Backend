@@ -105,10 +105,23 @@ public class HealthDataController {
         }
     }
 
+
     @PostMapping("/spo2")
-    public ResponseEntity<SPO2> saveSPO2(@RequestBody SPO2 spo2) {
-        return ResponseEntity.ok(healthDataService.saveSPO2(spo2));
+    public ResponseEntity<String> saveSPO2(@RequestBody SPO2 spo2) {
+        try {
+            // SPO2 테이블에 데이터 저장
+            healthDataService.saveSPO2Data(spo2);
+
+            // SPO2_Result 테이블에 데이터 저장 또는 업데이트
+            healthDataService.saveOrUpdateSPO2Result(spo2);
+
+            return ResponseEntity.ok("SPO2 data processed and saved successfully.");
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Error processing SPO2 data: " + e.getMessage());
+        }
     }
+
 
     @PostMapping("/eog")
     public ResponseEntity<String> saveECGData(@RequestBody EOG eog) {

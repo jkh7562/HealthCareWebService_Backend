@@ -33,6 +33,7 @@ public class HealthDataServiceImpl implements HealthDataService {
 
     private final BodyTemp_ResultRepository bodyTempResultRepository;
     private final NIBP_ResultRepository nibpResultRepository;
+    private final SPO2_ResultRepository spo2ResultRepository;
     private final ECG_ResultRepository ecgResultRepository;
 
 
@@ -48,6 +49,7 @@ public class HealthDataServiceImpl implements HealthDataService {
                                  ECG_ResultRepository ecgResultRepository,
                                  BodyTemp_ResultRepository bodyTempResultRepository,
                                  NIBP_ResultRepository nibpResultRepository,
+                                 SPO2_ResultRepository spo2ResultRepository,
                                  UserRepository userRepository) {
         this.airflowRepository = airflowRepository;
         this.bodyTempRepository = bodyTempRepository;
@@ -60,6 +62,7 @@ public class HealthDataServiceImpl implements HealthDataService {
         this.ecgResultRepository = ecgResultRepository;
         this.bodyTempResultRepository = bodyTempResultRepository;
         this.nibpResultRepository = nibpResultRepository;
+        this.spo2ResultRepository = spo2ResultRepository;
         this.userRepository = userRepository;
     }
 
@@ -168,7 +171,7 @@ public class HealthDataServiceImpl implements HealthDataService {
 
     //spo2 데이터 저장
     @Override
-    public SPO2 saveSPO2(SPO2 spo2) {
+    public SPO2 saveSPO2Data(SPO2 spo2) {
         validateUserid(spo2.getUserid());
 
         Optional<SPO2> existingSpo2 = spo2Repository.findOneByUserid(spo2.getUserid());
@@ -184,6 +187,34 @@ public class HealthDataServiceImpl implements HealthDataService {
             return spo2Repository.save(spo2);
         }
     }
+
+    @Override
+    public void saveOrUpdateSPO2Result(SPO2 spo2) {
+        validateUserid(spo2.getUserid());
+
+        // SPO2 상태를 판단
+        String status = SPO2Status(spo2.getSpo2data());
+
+        // 동일한 사용자 ID와 날짜가 있는 데이터 검색
+        Optional<SPO2_Result> existingResult = spo2ResultRepository.findByUseridAndDate(spo2.getUserid(), new Date());
+
+        if (existingResult.isPresent()) {
+            // 기존 데이터가 있으면 업데이트
+            SPO2_Result resultToUpdate = existingResult.get();
+            resultToUpdate.setSPO2Result(status);
+            spo2ResultRepository.save(resultToUpdate);
+            System.out.println("Updated record for userid: " + spo2.getUserid() + ", date: " + resultToUpdate.getDate());
+        } else {
+            // 기존 데이터가 없으면 새로 저장
+            SPO2_Result newResult = new SPO2_Result();
+            newResult.setUserid(spo2.getUserid());
+            newResult.setSPO2Result(status);
+            newResult.setDate(new Date());
+            spo2ResultRepository.save(newResult);
+            System.out.println("Saved new record for userid: " + spo2.getUserid() + ", date: " + newResult.getDate());
+        }
+    }
+
 
     @Override
     public NIBP saveNIBPData(NIBP nibp) {

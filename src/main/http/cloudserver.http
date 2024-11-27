@@ -5,7 +5,7 @@ GET https://examples.http-client.intellij.net/get
 ###/*"systolic": "110",
 #  "diastolic": "70"*/
 
-POST http://192.168.34.31:8081/ws/nibp
+POST http://192.168.34.31:8081/ws/spo2
 //POST http://localhost:8081/sw/ecg
 //POST https://c090-2406-5900-5071-2ca9-718a-cad1-c6f9-915e.ngrok-free.app/ws/ecg
 //POST https://reptile-promoted-publicly.ngrok-free.app/ws/spo2
@@ -14,8 +14,7 @@ Content-Type: application/json
 {
   "device_id": "d8:3a:dd:2f:35:94",
   "userid": "l7562l@naver.com",
-  "systolic": "110",
-  "diastolic": "100"
+  "spo2data" : "97"
 }
 
 
