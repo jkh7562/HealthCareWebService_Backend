@@ -1,6 +1,7 @@
 package com.example.iot_project_backserver.Service;
 
 import com.example.iot_project_backserver.Entity.*;
+import com.example.iot_project_backserver.Repository.User.UserRepository;
 import com.example.iot_project_backserver.exception.CustomException;
 import com.example.iot_project_backserver.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
