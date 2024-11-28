@@ -1,8 +1,8 @@
 package com.example.iot_project_backserver.Controller;
 
-import com.example.iot_project_backserver.entity.*;
-import com.example.iot_project_backserver.service.HealthDataService;
-import com.example.iot_project_backserver.service.ModelDataService;
+import com.example.iot_project_backserver.Entity.*;
+import com.example.iot_project_backserver.Service.HealthDataService;
+import com.example.iot_project_backserver.Service.ModelDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
@@ -61,11 +61,6 @@ public class HealthDataController {
     }
 
 
-    /*@GetMapping("/airflow")
-    public ResponseEntity<List<Airflow>> getAllAirflowData() {
-        return ResponseEntity.ok(healthDataService.getAllAirflowData());
-    }*/
-
     @PostMapping("/bodytemp")
     public ResponseEntity<String> saveBodyTemp(@RequestBody BodyTemp bodyTemp) {
         try {
@@ -82,12 +77,6 @@ public class HealthDataController {
         }
     }
 
-
-
-    @GetMapping("/bodytemp")
-    public ResponseEntity<List<BodyTemp>> getAllBodyTempData() {
-        return ResponseEntity.ok(healthDataService.getAllBodyTempData());
-    }
 
 
     @PostMapping("/nibp")
