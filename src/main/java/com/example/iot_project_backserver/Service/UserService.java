@@ -14,4 +14,12 @@ public interface UserService {
     Optional<Map<String, String>> getUserInfoByUserid(String userid);
     Optional<app_user> findUserByUserid(String userid);
     List<Float> getEcgAverageValuesByUserId(String userid);
+    List<Float> getAirflowAverageValuesByUserId(String userid);
+    List<Float> getEmgAverageValuesByUserId(String userid);
+    List<Float> getEogAverageValuesByUserId(String userid);
+    List<Float> getGsrAverageValuesByUserId(String userid);
+    List<Float> getTempDataByUserId(String userid);
+    List<Integer> getSPO2DataByUserId(String userid);
+    List<Map<String, Integer>> getNIBPDataByUserId(String userid);
+    Map<String, Object> getMeasurementData(String userid);
 }

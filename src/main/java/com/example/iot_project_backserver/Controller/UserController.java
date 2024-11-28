@@ -176,13 +176,33 @@ public class UserController {
     }
     @PostMapping("/medicalchart")
     public ResponseEntity<Map<String, Object>> medicalchart(@RequestBody Map<String, String> requestData) {
-        String userId = requestData.get("userid");
-        List<Float> EcgAverageValues = userService.getEcgAverageValuesByUserId(userId);
+        String userid = requestData.get("userid");
+        List<Float> EcgAverageValues = userService.getEcgAverageValuesByUserId(userid);
+        List<Float> AirflowAverageValues = userService.getAirflowAverageValuesByUserId(userid);
+        List<Float> EmgAverageValues = userService.getEmgAverageValuesByUserId(userid);
+        List<Float> EogAverageValues = userService.getEogAverageValuesByUserId(userid);
+        List<Float> GsrAverageValues = userService.getGsrAverageValuesByUserId(userid);
+        List<Float> tempDataList = userService.getTempDataByUserId(userid);
+        List<Integer> spo2DataList = userService.getSPO2DataByUserId(userid);
+        List<Map<String, Integer>> nibpDataList = userService.getNIBPDataByUserId(userid);
 
         Map<String, Object> response = new HashMap<>();
-        response.put("userid", userId);
+        response.put("userid", userid);
         response.put("EcgAverageValues", EcgAverageValues);
+        response.put("AirflowAverageValues", AirflowAverageValues);
+        response.put("EmgAverageValues", EmgAverageValues);
+        response.put("EogAverageValues", EogAverageValues);
+        response.put("GsrAverageValues", GsrAverageValues);
+        response.put("tempdata", tempDataList);
+        response.put("spo2DataList", spo2DataList);
+        response.put("nibpDataList", nibpDataList);
 
         return ResponseEntity.ok(response);
+    }
+    @PostMapping("/loadmeasurement")
+    public ResponseEntity<Map<String, Object>> loadmeasurement(@RequestBody Map<String, String> requestData) {
+        String userid = requestData.get("userid");
+        Map<String, Object> measurementData = userService.getMeasurementData(userid);
+        return ResponseEntity.ok(measurementData);
     }
 }
