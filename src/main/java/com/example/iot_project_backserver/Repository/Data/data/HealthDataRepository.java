@@ -1,7 +1,6 @@
-package com.example.iot_project_backserver.Repository;
+package com.example.iot_project_backserver.Repository.Data.data;
 
 
-import java.util.List;
 import java.util.Optional;
 
 public interface HealthDataRepository<T> {

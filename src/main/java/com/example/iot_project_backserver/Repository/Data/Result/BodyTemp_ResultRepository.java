@@ -1,4 +1,4 @@
-package com.example.iot_project_backserver.Repository;
+package com.example.iot_project_backserver.Repository.Data.Result;
 
 import com.example.iot_project_backserver.Entity.Data.Result.BodyTemp_Result;
 import org.springframework.data.jpa.repository.JpaRepository;

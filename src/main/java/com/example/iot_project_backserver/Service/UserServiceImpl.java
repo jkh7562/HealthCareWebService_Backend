@@ -2,7 +2,7 @@ package com.example.iot_project_backserver.Service;
 
 import com.example.iot_project_backserver.Entity.Data.Average.EcgAverage;
 import com.example.iot_project_backserver.Entity.User.app_user;
-import com.example.iot_project_backserver.Repository.EcgRepository;
+import com.example.iot_project_backserver.Repository.Data.data.EcgRepository;
 import com.example.iot_project_backserver.Repository.Medical.PatientAssignmentRepository;
 import com.example.iot_project_backserver.Repository.User.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
