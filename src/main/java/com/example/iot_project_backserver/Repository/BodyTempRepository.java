@@ -1,6 +1,6 @@
 package com.example.iot_project_backserver.Repository;
 
-import com.example.iot_project_backserver.Entity.BodyTemp;
+import com.example.iot_project_backserver.Entity.Data.data.BodyTemp;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 // BodyTemp 엔티티를 위한 리포지토리

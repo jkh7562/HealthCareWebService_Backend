@@ -1,9 +1,9 @@
 package com.example.iot_project_backserver.Service;
 
 
-import com.example.iot_project_backserver.Entity.*;
+import com.example.iot_project_backserver.Entity.Data.Result.*;
+import com.example.iot_project_backserver.Entity.Data.data.*;
 
-import java.util.List;
 import java.util.Map;
 
 public interface HealthDataService {

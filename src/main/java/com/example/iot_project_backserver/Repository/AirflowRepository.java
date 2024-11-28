@@ -1,6 +1,6 @@
 package com.example.iot_project_backserver.Repository;
 
-import com.example.iot_project_backserver.Entity.Airflow;
+import com.example.iot_project_backserver.Entity.Data.data.Airflow;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

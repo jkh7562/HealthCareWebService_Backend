@@ -1,6 +1,8 @@
 package com.example.iot_project_backserver.Service;
 
-import com.example.iot_project_backserver.Entity.*;
+import com.example.iot_project_backserver.Entity.Data.Average.*;
+import com.example.iot_project_backserver.Entity.Data.Result.*;
+import com.example.iot_project_backserver.Entity.Data.data.*;
 import com.example.iot_project_backserver.Repository.User.UserRepository;
 import com.example.iot_project_backserver.exception.CustomException;
 import com.example.iot_project_backserver.Repository.*;

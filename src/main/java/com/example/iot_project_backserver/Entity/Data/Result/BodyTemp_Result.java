@@ -1,4 +1,4 @@
-package com.example.iot_project_backserver.Entity;
+package com.example.iot_project_backserver.Entity.Data.Result;
 
 
 import jakarta.persistence.*;
@@ -8,14 +8,14 @@ import java.util.Date;
 
 @Entity
 @Data
-public class SPO2_Result {
+public class BodyTemp_Result {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // 기본키 생성
     private Long id;
 
     private String userid;
 
-    private String SPO2Result;
+    private String BodyTempResult;
     @Temporal(TemporalType.DATE)
     private Date date;
 }

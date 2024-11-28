@@ -1,6 +1,6 @@
 package com.example.iot_project_backserver.Repository;
 
-import com.example.iot_project_backserver.Entity.ECG;
+import com.example.iot_project_backserver.Entity.Data.data.ECG;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

@@ -1,6 +1,6 @@
 package com.example.iot_project_backserver.Repository;
 
-import com.example.iot_project_backserver.Entity.EOG;
+import com.example.iot_project_backserver.Entity.Data.data.EOG;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 // Eog 엔티티를 위한 리포지토리

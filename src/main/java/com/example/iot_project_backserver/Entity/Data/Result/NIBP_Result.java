@@ -1,4 +1,4 @@
-package com.example.iot_project_backserver.Entity;
+package com.example.iot_project_backserver.Entity.Data.Result;
 
 
 import jakarta.persistence.*;

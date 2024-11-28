@@ -1,6 +1,7 @@
 package com.example.iot_project_backserver.Controller;
 
-import com.example.iot_project_backserver.Entity.*;
+import com.example.iot_project_backserver.Entity.Data.Result.*;
+import com.example.iot_project_backserver.Entity.Data.data.*;
 import com.example.iot_project_backserver.Service.HealthDataService;
 import com.example.iot_project_backserver.Service.ModelDataService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +10,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 

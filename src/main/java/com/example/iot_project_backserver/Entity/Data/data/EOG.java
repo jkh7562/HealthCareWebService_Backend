@@ -1,5 +1,6 @@
-package com.example.iot_project_backserver.Entity;
+package com.example.iot_project_backserver.Entity.Data.data;
 
+import com.example.iot_project_backserver.Entity.Data.Average.EogAverage;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

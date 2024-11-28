@@ -1,7 +1,7 @@
 package com.example.iot_project_backserver.Repository;
 
 
-import com.example.iot_project_backserver.Entity.EOG_Result;
+import com.example.iot_project_backserver.Entity.Data.Result.EOG_Result;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Date;

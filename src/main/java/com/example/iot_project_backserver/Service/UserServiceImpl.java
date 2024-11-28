@@ -1,13 +1,11 @@
 package com.example.iot_project_backserver.Service;
 
-import com.example.iot_project_backserver.Entity.EcgAverage;
+import com.example.iot_project_backserver.Entity.Data.Average.EcgAverage;
 import com.example.iot_project_backserver.Entity.User.app_user;
 import com.example.iot_project_backserver.Repository.EcgRepository;
 import com.example.iot_project_backserver.Repository.Medical.PatientAssignmentRepository;
 import com.example.iot_project_backserver.Repository.User.UserRepository;
-import com.example.iot_project_backserver.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
