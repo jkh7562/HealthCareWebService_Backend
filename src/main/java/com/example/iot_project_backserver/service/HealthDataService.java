@@ -10,6 +10,9 @@ public interface HealthDataService {
     //Airflow
     Airflow saveAirflow(Airflow airflow);
     List<Airflow> getAllAirflowData();
+    void processAndSaveAirflowData(Airflow airflow);
+    void saveOrUpdateAirflowResult(AirFlow_Result airFlowresult);
+    Map<String,Object> callFastAPIAirFlow(Airflow airflow);
 
     //BodyTemp
     BodyTemp saveBodyTempData(BodyTemp bodyTemp);
@@ -24,6 +27,9 @@ public interface HealthDataService {
     // Eog 관련 메서드
     EOG saveEogData(EOG eog);
     List<EOG> getAllEogData();
+    void processAndSaveEOGData(EOG eog);
+    void saveOrUpdateEOGResult(EOG_Result eogresult);
+    Map<String,Object> callFastAPIEOG(EOG eog);
 
     //SPO2 관련 메서드
     SPO2 saveSPO2Data(SPO2 spo2);
@@ -36,10 +42,20 @@ public interface HealthDataService {
     Map<String,Object> callFastAPIECG(ECG ecg);
 
 
+    //GSR 관련 메서드
     void processAndSaveGSRData(GSR gsr);
-    void processAndSaveAirflowData(Airflow airflow);
+    void saveOrUpdateGSRResult(GSR_Result gsrResult);
+    Map<String,Object> callFastAPIGSR(GSR gsr);
+
+
+
+    //EMG 관련 메서드
     void processAndSaveEMGData(EMG emg);
-    void processAndSaveEOGData(EOG eog);
+    void saveOrUpdateEMGResult(EMG_Result emgResult);
+    Map<String,Object> callFastAPIEMG(EMG emg);
+
+
+
 
 
     //ECG_Result saveECGResult(ECG_Result ecgResult);

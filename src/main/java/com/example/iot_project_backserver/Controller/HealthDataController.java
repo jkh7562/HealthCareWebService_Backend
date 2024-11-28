@@ -35,12 +35,43 @@ public class HealthDataController {
     @Autowired
     public ModelDataServiceServiceImpl modelDataServiceImpl;
 
-    @PostMapping("/airflow")
+    /*@PostMapping("/airflow")
     public ResponseEntity<String> saveAirflow(@RequestBody Airflow airflow) { //TODO 이후 valid 이용해서 검증 기증 추가하기
         modelDataServiceImpl.createAirflowDataCSV(airflow);
         healthDataService.processAndSaveAirflowData(airflow);
         return ResponseEntity.ok("Airflow data processed and saved successfully.");
+    }*/
+    @PostMapping("/airflow")
+    public ResponseEntity<String> saveAirflowData(@RequestBody Airflow airflow) {
+        // CSV 파일 생성
+        modelDataService.createAirflowDataCSV(airflow);
+
+        // Airflow 데이터 처리 및 저장
+        healthDataService.processAndSaveAirflowData(airflow);
+
+        try {
+            // FastAPI 호출 및 응답 처리
+            Map<String, Object> responseBody = healthDataService.callFastAPIAirFlow(airflow);
+
+            // FastAPI 응답에서 데이터 추출
+            String airflowResult = (String) responseBody.get("airflowresult");
+
+            // Airflow_Result 엔터티 생성
+            AirFlow_Result airflowResultEntity = new AirFlow_Result();
+            airflowResultEntity.setUserid(airflow.getUserid());
+            airflowResultEntity.setAirFlowResult(airflowResult);
+            airflowResultEntity.setDate(new Date());
+
+            // 저장 또는 업데이트
+            healthDataService.saveOrUpdateAirflowResult(airflowResultEntity);
+
+            return ResponseEntity.ok("FastAPI result: " + responseBody);
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Error processing Airflow data: " + e.getMessage());
+        }
     }
+
 
     @GetMapping("/airflow")
     public ResponseEntity<List<Airflow>> getAllAirflowData() {
@@ -123,12 +154,40 @@ public class HealthDataController {
     }
 
 
-    @PostMapping("/eog")
+    /*@PostMapping("/eog")
     public ResponseEntity<String> saveECGData(@RequestBody EOG eog) {
         modelDataServiceImpl.createEOGDataCSV(eog);
         healthDataService.processAndSaveEOGData(eog);
         return ResponseEntity.ok("EOG data processed and saved successfully.");
+    }*/
+    @PostMapping("/eog")
+    public ResponseEntity<String> saveEOGData(@RequestBody EOG eog) {
+        modelDataService.createEOGDataCSV(eog);
+        healthDataService.processAndSaveEOGData(eog);
+        try {
+            // FastAPI 호출 및 응답 처리
+            Map<String, Object> responseBody = healthDataService.callFastAPIEOG(eog);
+
+            // FastAPI 응답에서 데이터 추출
+            String eogResult = (String) responseBody.get("eogresult");
+
+            // EOG_Result 엔터티 생성
+            EOG_Result eogResultEntity = new EOG_Result();
+            eogResultEntity.setUserid(eog.getUserid());
+            eogResultEntity.setEogResult(eogResult);
+            eogResultEntity.setDate(new Date());
+
+            // 저장 또는 업데이트
+            healthDataService.saveOrUpdateEOGResult(eogResultEntity);
+
+            return ResponseEntity.ok("FastAPI result: " + responseBody);
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Error processing EOG data: " + e.getMessage());
+        }
     }
+
+
 
     @GetMapping("/eog")
     public ResponseEntity<List<EOG>> getAllEogData() {return ResponseEntity.ok(healthDataService.getAllEogData());
@@ -227,16 +286,66 @@ public class HealthDataController {
 
     @PostMapping("/emg")
     public ResponseEntity<String> saveEMGData(@RequestBody EMG emg) {
-        modelDataServiceImpl.createEMGDataCSV(emg);
+        // CSV 파일 생성
+        modelDataService.createEMGDataCSV(emg);
+
+        // EMG 데이터 처리 및 저장
         healthDataService.processAndSaveEMGData(emg);
-        return ResponseEntity.ok("EMG data processed and saved successfully.");
+
+        try {
+            // FastAPI 호출 및 응답 처리
+            Map<String, Object> responseBody = healthDataService.callFastAPIEMG(emg);
+
+            // FastAPI 응답에서 데이터 추출
+            String emgResult = (String) responseBody.get("emgresult");
+
+            // EMG_Result 엔터티 생성
+            EMG_Result emgResultEntity = new EMG_Result();
+            emgResultEntity.setUserid(emg.getUserid());
+            emgResultEntity.setEmgResult(emgResult);
+            emgResultEntity.setDate(new Date());
+
+            // 저장 또는 업데이트
+            healthDataService.saveOrUpdateEMGResult(emgResultEntity);
+
+            return ResponseEntity.ok("FastAPI result: " + responseBody);
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Error processing EMG data: " + e.getMessage());
+        }
     }
+
 
     @PostMapping("/gsr")
     public ResponseEntity<String> saveGSRData(@RequestBody GSR gsr) {
-        modelDataServiceImpl.createGSRDataCSV(gsr);
+        // CSV 파일 생성
+        modelDataService.createGSRDataCSV(gsr);
+
+        // GSR 데이터 처리 및 저장
         healthDataService.processAndSaveGSRData(gsr);
-        return ResponseEntity.ok("GSR data processed and saved successfully.");
+
+        try {
+            // FastAPI 호출 및 응답 처리
+            Map<String, Object> responseBody = healthDataService.callFastAPIGSR(gsr);
+
+            // FastAPI 응답에서 데이터 추출
+            String gsrResult = (String) responseBody.get("gsrresult");
+
+            // GSR_Result 엔터티 생성
+            GSR_Result gsrResultEntity = new GSR_Result();
+            gsrResultEntity.setUserid(gsr.getUserid());
+            gsrResultEntity.setGsrResult(gsrResult);
+            gsrResultEntity.setDate(new Date());
+
+            // 저장 또는 업데이트
+            healthDataService.saveOrUpdateGSRResult(gsrResultEntity);
+
+            return ResponseEntity.ok("FastAPI result: " + responseBody);
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Error processing GSR data: " + e.getMessage());
+        }
     }
+
 
 }

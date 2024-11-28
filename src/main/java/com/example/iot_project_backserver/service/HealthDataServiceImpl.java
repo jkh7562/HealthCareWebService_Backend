@@ -35,6 +35,10 @@ public class HealthDataServiceImpl implements HealthDataService {
     private final NIBP_ResultRepository nibpResultRepository;
     private final SPO2_ResultRepository spo2ResultRepository;
     private final ECG_ResultRepository ecgResultRepository;
+    private final EMG_ResultRepository emgResultRepository;
+    private final EOG_ResultRepository eogResultRepository;
+    private final GSR_ResultRepository gsrResultRepository;
+    private final AirFlow_ResultRepository airFlowResultRepository;
 
 
     @Autowired
@@ -50,6 +54,10 @@ public class HealthDataServiceImpl implements HealthDataService {
                                  BodyTemp_ResultRepository bodyTempResultRepository,
                                  NIBP_ResultRepository nibpResultRepository,
                                  SPO2_ResultRepository spo2ResultRepository,
+                                 EMG_ResultRepository emgResultRepository,
+                                 EOG_ResultRepository eogResultRepository,
+                                 GSR_ResultRepository gsrResultRepository,
+                                 AirFlow_ResultRepository airFlowResultRepository,
                                  UserRepository userRepository) {
         this.airflowRepository = airflowRepository;
         this.bodyTempRepository = bodyTempRepository;
@@ -63,6 +71,10 @@ public class HealthDataServiceImpl implements HealthDataService {
         this.bodyTempResultRepository = bodyTempResultRepository;
         this.nibpResultRepository = nibpResultRepository;
         this.spo2ResultRepository = spo2ResultRepository;
+        this.emgResultRepository = emgResultRepository;
+        this.eogResultRepository = eogResultRepository;
+        this.gsrResultRepository = gsrResultRepository;
+        this.airFlowResultRepository = airFlowResultRepository;
         this.userRepository = userRepository;
     }
 
@@ -381,7 +393,220 @@ public class HealthDataServiceImpl implements HealthDataService {
         return airflowRepository.findAll();
     }
 
-    
+
+    @Override
+    public void saveOrUpdateAirflowResult(AirFlow_Result airflowResult) {
+        // 동일한 사용자 ID와 날짜가 있는 데이터 검색
+        Optional<AirFlow_Result> existingResult = airFlowResultRepository.findByUseridAndDate(airflowResult.getUserid(), airflowResult.getDate());
+
+        if (existingResult.isPresent()) {
+            // 기존 데이터가 있으면 업데이트
+            AirFlow_Result resultToUpdate = existingResult.get();
+            resultToUpdate.setAirFlowResult(airflowResult.getAirFlowResult());
+            airFlowResultRepository.save(resultToUpdate);
+            System.out.println("Updated record for userid:" + airflowResult.getUserid() + ", date: " + airflowResult.getDate());
+        } else {
+            // 기존 데이터가 없으면 새로 저장
+            airFlowResultRepository.save(airflowResult);
+            System.out.println("Saved new record for userid:" + airflowResult.getUserid() + ", date: " + airflowResult.getDate());
+        }
+    }
+
+
+    @Override
+    public Map<String, Object> callFastAPIAirFlow(Airflow airflow) {
+        validateUserid(airflow.getUserid());
+        try {
+            // FastAPI로 전송할 JSON 데이터 준비
+            Map<String, Object> payload = new HashMap<>();
+            payload.put("userid", airflow.getUserid());
+            payload.put("airflowdata", airflow.getAirflowdata());
+
+            // FastAPI 서버 URL
+            String fastApiUrl = "http://127.0.0.1:8082/airflow"; // Airflow 전용 URL
+
+            // RestTemplate 생성 및 JSON Content-Type 설정
+            RestTemplate restTemplate = new RestTemplate();
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            HttpEntity<Map<String, Object>> request = new HttpEntity<>(payload, headers);
+
+            // POST 요청 전송
+            ResponseEntity<Map> response = restTemplate.postForEntity(fastApiUrl, request, Map.class);
+
+            // FastAPI의 응답 처리
+            if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+                return response.getBody();
+            } else {
+                throw new RuntimeException("FastAPI call failed with status: " + response.getStatusCode());
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Error calling FastAPI", e);
+        }
+    }
+
+
+
+
+    @Override
+    public void saveOrUpdateGSRResult(GSR_Result gsrResult) {
+        // 동일한 사용자 ID와 날짜가 있는 데이터 검색
+        Optional<GSR_Result> existingResult = gsrResultRepository.findByUseridAndDate(gsrResult.getUserid(), gsrResult.getDate());
+
+        if (existingResult.isPresent()) {
+            // 기존 데이터가 있으면 업데이트
+            GSR_Result resultToUpdate = existingResult.get();
+            resultToUpdate.setGsrResult(gsrResult.getGsrResult());
+            gsrResultRepository.save(resultToUpdate);
+            System.out.println("Updated record for userid:" + gsrResult.getUserid() + ", date: " + gsrResult.getDate());
+        } else {
+            // 기존 데이터가 없으면 새로 저장
+            gsrResultRepository.save(gsrResult);
+            System.out.println("Saved new record for userid:" + gsrResult.getUserid() + ", date: " + gsrResult.getDate());
+        }
+    }
+
+    @Override
+    public Map<String, Object> callFastAPIGSR(GSR gsr) {
+        validateUserid(gsr.getUserid());
+        try {
+            // FastAPI로 전송할 JSON 데이터 준비
+            Map<String, Object> payload = new HashMap<>();
+            payload.put("userid", gsr.getUserid());
+            payload.put("gsrdata", gsr.getGsrdata());
+
+            // FastAPI 서버 URL
+            String fastApiUrl = "http://127.0.0.1:8082/gsr"; // GSR 전용 URL
+
+            // RestTemplate 생성 및 JSON Content-Type 설정
+            RestTemplate restTemplate = new RestTemplate();
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            HttpEntity<Map<String, Object>> request = new HttpEntity<>(payload, headers);
+
+            // POST 요청 전송
+            ResponseEntity<Map> response = restTemplate.postForEntity(fastApiUrl, request, Map.class);
+
+            // FastAPI의 응답 처리
+            if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+                return response.getBody();
+            } else {
+                throw new RuntimeException("FastAPI call failed with status: " + response.getStatusCode());
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Error calling FastAPI", e);
+        }
+    }
+
+
+
+
+    @Override
+    public void saveOrUpdateEOGResult(EOG_Result eogResult) {
+        // 동일한 사용자 ID와 날짜가 있는 데이터 검색
+        Optional<EOG_Result> existingResult = eogResultRepository.findByUseridAndDate(eogResult.getUserid(), eogResult.getDate());
+
+        if (existingResult.isPresent()) {
+            // 기존 데이터가 있으면 업데이트
+            EOG_Result resultToUpdate = existingResult.get();
+            resultToUpdate.setEogResult(eogResult.getEogResult());
+            eogResultRepository.save(resultToUpdate);
+            System.out.println("Updated record for userid:" + eogResult.getUserid() + ", date: " + eogResult.getDate());
+        } else {
+            // 기존 데이터가 없으면 새로 저장
+            eogResultRepository.save(eogResult);
+            System.out.println("Saved new record for userid:" + eogResult.getUserid() + ", date: " + eogResult.getDate());
+        }
+    }
+    @Override
+    public Map<String, Object> callFastAPIEOG(EOG eog) {
+        validateUserid(eog.getUserid());
+        try {
+            // FastAPI로 전송할 JSON 데이터 준비
+            Map<String, Object> payload = new HashMap<>();
+            payload.put("userid", eog.getUserid());
+            payload.put("eogdata", eog.getEogdata());
+
+            // FastAPI 서버 URL
+            String fastApiUrl = "http://127.0.0.1:8082/eog"; // EOG 전용 URL
+
+            // RestTemplate 생성 및 JSON Content-Type 설정
+            RestTemplate restTemplate = new RestTemplate();
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            HttpEntity<Map<String, Object>> request = new HttpEntity<>(payload, headers);
+
+            // POST 요청 전송
+            ResponseEntity<Map> response = restTemplate.postForEntity(fastApiUrl, request, Map.class);
+
+            // FastAPI의 응답 처리
+            if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+                return response.getBody();
+            } else {
+                throw new RuntimeException("FastAPI call failed with status: " + response.getStatusCode());
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Error calling FastAPI", e);
+        }
+    }
+
+
+
+
+
+    @Override
+    public void saveOrUpdateEMGResult(EMG_Result emgResult) {
+        // 동일한 사용자 ID와 날짜가 있는 데이터 검색
+        Optional<EMG_Result> existingResult = emgResultRepository.findByUseridAndDate(emgResult.getUserid(), emgResult.getDate());
+
+        if (existingResult.isPresent()) {
+            // 기존 데이터가 있으면 업데이트
+            EMG_Result resultToUpdate = existingResult.get();
+            resultToUpdate.setEmgResult(emgResult.getEmgResult());
+            emgResultRepository.save(resultToUpdate);
+            System.out.println("Updated record for userid:" + emgResult.getUserid() + ", date: " + emgResult.getDate());
+        } else {
+            // 기존 데이터가 없으면 새로 저장
+            emgResultRepository.save(emgResult);
+            System.out.println("Saved new record for userid:" + emgResult.getUserid() + ", date: " + emgResult.getDate());
+        }
+    }
+
+    @Override
+    public Map<String, Object> callFastAPIEMG(EMG emg) {
+        validateUserid(emg.getUserid());
+        try {
+            // FastAPI로 전송할 JSON 데이터 준비
+            Map<String, Object> payload = new HashMap<>();
+            payload.put("userid", emg.getUserid());
+            payload.put("emgdata", emg.getEmgdata());
+
+            // FastAPI 서버 URL
+            String fastApiUrl = "http://127.0.0.1:8082/emg"; // EMG 전용 URL
+
+            // RestTemplate 생성 및 JSON Content-Type 설정
+            RestTemplate restTemplate = new RestTemplate();
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            HttpEntity<Map<String, Object>> request = new HttpEntity<>(payload, headers);
+
+            // POST 요청 전송
+            ResponseEntity<Map> response = restTemplate.postForEntity(fastApiUrl, request, Map.class);
+
+            // FastAPI의 응답 처리
+            if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+                return response.getBody();
+            } else {
+                throw new RuntimeException("FastAPI call failed with status: " + response.getStatusCode());
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Error calling FastAPI", e);
+        }
+    }
+
+
+
+
     //ECG 판단 데이터 저장
     @Override
     public void saveOrUpdateECGResult(ECG_Result ecgResult) {
@@ -411,7 +636,7 @@ public class HealthDataServiceImpl implements HealthDataService {
             payload.put("ecgdata", ecg.getEcgdata());
 
             // FastAPI 서버 URL
-            String fastApiUrl = "http://127.0.0.1:8082/predict";
+            String fastApiUrl = "http://127.0.0.1:8082/ecg";
 
             // RestTemplate 생성 및 JSON Content-Type 설정
             RestTemplate restTemplate = new RestTemplate();

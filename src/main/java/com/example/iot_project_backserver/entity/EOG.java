@@ -26,5 +26,9 @@ public class EOG {
 
     @ElementCollection
     @CollectionTable(name = "eog_averages", joinColumns = @JoinColumn(name = "eog_id"))
-    private List<EogAverage> averages; // 평균값 리스트 저장
+    @AttributeOverrides({
+            @AttributeOverride(name = "EogAverageValue", column = @Column(name = "EogAverageValue")),
+            @AttributeOverride(name = "userid", column = @Column(name = "userid"))
+    })
+    private List<EogAverage> averages;
 }

@@ -27,7 +27,7 @@ public class ECG {
         @ElementCollection
         @CollectionTable(name = "ecg_averages", joinColumns = @JoinColumn(name = "ecg_id"))
         @AttributeOverrides({
-                @AttributeOverride(name = "EcgAverageValue", column = @Column(name = "EcgAveragevalue")),
+                @AttributeOverride(name = "EcgAverageValue", column = @Column(name = "EcgAverageValue")),
                 @AttributeOverride(name = "userid", column = @Column(name = "userid"))
         })
         private List<EcgAverage> averages;
