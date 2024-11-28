@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -172,5 +173,16 @@ public class UserController {
             response.put("status", "null");
             return ResponseEntity.ok(response);
         }
+    }
+    @PostMapping("/medicalchart")
+    public ResponseEntity<Map<String, Object>> medicalchart(@RequestBody Map<String, String> requestData) {
+        String userId = requestData.get("userid");
+        List<Float> EcgAverageValues = userService.getEcgAverageValuesByUserId(userId);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("userid", userId);
+        response.put("EcgAverageValues", EcgAverageValues);
+
+        return ResponseEntity.ok(response);
     }
 }
