@@ -10,12 +10,6 @@ import java.util.List;
 @Service
 public class ModelDataServiceServiceImpl implements ModelDataService {
 
-    /*private final ECG_ResultRepository ecgResultRepository;
-
-    public ModelDataServiceServiceImpl(ECG_ResultRepository ecgResultRepository) {
-        this.ecgResultRepository = ecgResultRepository;
-    }*/
-
 
     @Override
     public void createECGDataCSV(ECG ecg) {
