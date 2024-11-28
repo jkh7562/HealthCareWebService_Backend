@@ -300,7 +300,7 @@ public class HealthDataServiceImpl implements HealthDataService {
                 averages -> averages.stream()
                         .map(avg -> {
                             AirflowAverage airAverage = new AirflowAverage(); // 올바른 클래스 이름
-                            airAverage.setAverageValue(avg);
+                            airAverage.setAirflowAverageValue(avg);
                             airAverage.setUserid(airflow.getUserid());
                             return airAverage;
                         })
@@ -320,7 +320,7 @@ public class HealthDataServiceImpl implements HealthDataService {
                 averages -> averages.stream()
                         .map(avg -> {
                             EogAverage eogAverage = new EogAverage();
-                            eogAverage.setAverageValue(avg);
+                            eogAverage.setEogAverageValue(avg);
                             eogAverage.setUserid(eog.getUserid());
                             return eogAverage;
                         })

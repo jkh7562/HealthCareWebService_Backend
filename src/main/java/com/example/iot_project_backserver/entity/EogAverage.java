@@ -8,6 +8,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class EogAverage {
-    private Float averageValue; // 평균값
+    private Float EogAverageValue; // 평균값
     private String userid; // 사용자 ID
 }

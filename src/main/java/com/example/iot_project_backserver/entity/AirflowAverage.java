@@ -8,6 +8,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class AirflowAverage {
-    private Float averageValue;
+    private Float AirflowAverageValue;
     private String userid;
 }
