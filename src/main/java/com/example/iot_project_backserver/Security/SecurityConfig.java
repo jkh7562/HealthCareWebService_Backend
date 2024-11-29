@@ -40,7 +40,7 @@ public class SecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 세션 사용하지 않음
                 .and()
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/idcheck", "/signup", "/login", "/refresh", "/ws/**",  "/127.0.0.1/**").permitAll() // 인증 없이 접근 가능한 엔드포인트
+                        .requestMatchers("/idcheck", "/signup", "/login", "/refresh", "/ws/**",  "/127.0.0.1/**", "port-0-iot-healthcare-1272llwukgaeg.sel5.cloudtype.app/**").permitAll() // 인증 없이 접근 가능한 엔드포인트
                         .anyRequest().authenticated() // 그 외의 요청은 인증 필요
                 )
                 .addFilterBefore(new TokenAuthenticationFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class) // 필터 추가
