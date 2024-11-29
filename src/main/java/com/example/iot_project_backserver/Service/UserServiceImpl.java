@@ -165,14 +165,14 @@ public class UserServiceImpl implements UserService {
 
     public Map<String, Object> getMeasurementData(String userid) {
         Map<String, Object> response = new HashMap<>();
-        response.put("airFlowResults", airFlowResultRepository.findByUserid(userid));
-        response.put("bodyTempResults", bodyTempResultRepository.findByUserid(userid));
-        response.put("ecgResults", ecgResultRepository.findByUserid(userid));
-        response.put("emgResults", emgResultRepository.findByUserid(userid));
-        response.put("eogResults", eogResultRepository.findByUserid(userid));
-        response.put("gsrResults", gsrResultRepository.findByUserid(userid));
-        response.put("nibpResults", nibpResultRepository.findByUserid(userid));
-        response.put("spo2Results", spo2ResultRepository.findByUserid(userid));
+        response.put("airFlowResults", airFlowResultRepository.findByUseridOrNull(userid));
+        response.put("bodyTempResults", bodyTempResultRepository.findByUseridOrNull(userid));
+        response.put("ecgResults", ecgResultRepository.findByUseridOrNull(userid));
+        response.put("emgResults", emgResultRepository.findByUseridOrNull(userid));
+        response.put("eogResults", eogResultRepository.findByUseridOrNull(userid));
+        response.put("gsrResults", gsrResultRepository.findByUseridOrNull(userid));
+        response.put("nibpResults", nibpResultRepository.findByUseridOrNull(userid));
+        response.put("spo2Results", spo2ResultRepository.findByUseridOrNull(userid));
         return response;
     }
 }
