@@ -49,23 +49,25 @@ public class ExcelGenerator {
         Sheet sheet;
 
         File file = new File(fileName);
-        if (!file.exists()) {
-            throw new RuntimeException("파일이 존재하지 않습니다: " + fileName);
-        }
-        if (file.length() == 0) {
-            throw new RuntimeException("파일이 비어 있습니다: " + fileName);
-        }
 
-        try (FileInputStream fis = new FileInputStream(file)) {
-            String mimeType = Files.probeContentType(file.toPath());
-            if (!"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet".equals(mimeType)) {
-                throw new RuntimeException("올바른 엑셀 파일 형식이 아닙니다: " + fileName);
+        // 파일 존재 여부 확인
+        if (file.exists()) {
+            // 기존 파일 열기
+            try (FileInputStream fis = new FileInputStream(file)) {
+                String mimeType = Files.probeContentType(file.toPath());
+                if (!"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet".equals(mimeType)) {
+                    throw new RuntimeException("올바른 엑셀 파일 형식이 아닙니다: " + fileName);
+                }
+                workbook = WorkbookFactory.create(fis);
+                sheet = workbook.getSheetAt(0);
+            } catch (IOException e) {
+                throw new RuntimeException("엑셀 파일 열기 중 오류 발생: " + e.getMessage(), e);
             }
-
-            workbook = WorkbookFactory.create(fis);
-            sheet = workbook.getSheetAt(0);
-        } catch (IOException e) {
-            throw new RuntimeException("엑셀 파일 열기 중 오류 발생: " + e.getMessage(), e);
+        } else {
+            // 새 파일 생성
+            workbook = new XSSFWorkbook();
+            sheet = workbook.createSheet("Data");
+            createHeader(sheet, headers);
         }
 
         // 데이터 추가
@@ -78,7 +80,6 @@ public class ExcelGenerator {
         // 파일 저장
         saveExcelFile(workbook, fileName);
     }
-
 
     private static void createHeader(Sheet sheet, List<String> headers) {
         Row headerRow = sheet.createRow(0);
@@ -114,4 +115,5 @@ public class ExcelGenerator {
             }
         }
     }
+
 }
