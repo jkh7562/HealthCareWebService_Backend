@@ -1,6 +1,7 @@
 package com.example.iot_project_backserver.Repository.Data.Result;
 
 
+import com.example.iot_project_backserver.Entity.Data.Result.AirFlow_Result;
 import com.example.iot_project_backserver.Entity.Data.Result.EOG_Result;
 import com.example.iot_project_backserver.Entity.Data.Result.GSR_Result;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,8 +12,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-public interface GSR_ResultRepository extends JpaRepository<GSR_Result, Long> {
-    Optional<GSR_Result> findByUseridAndDate(String userid, Date dates);
+public interface GSR_ResultRepository extends JpaRepository<GSR_Result, Long>, HealthData_ResultRepository<GSR_Result> {
+    //Optional<GSR_Result> findByUseridAndDate(String userid, Date dates);
     @Query("SELECT a FROM GSR_Result a WHERE a.userid = :userid")
     List<GSR_Result> findByUseridOrNull(@Param("userid") String userid);
 }

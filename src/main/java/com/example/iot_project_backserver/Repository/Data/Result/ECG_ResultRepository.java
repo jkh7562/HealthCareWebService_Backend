@@ -10,8 +10,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-public interface ECG_ResultRepository extends JpaRepository<ECG_Result, Long> {
-    Optional<ECG_Result> findByUseridAndDate(String userid, Date dates);
+public interface ECG_ResultRepository extends JpaRepository<ECG_Result, Long>, HealthData_ResultRepository<ECG_Result> {
+    //Optional<ECG_Result> findByUseridAndDate(String userid, Date dates);
     @Query("SELECT a FROM ECG_Result a WHERE a.userid = :userid")
     List<ECG_Result> findByUseridOrNull(@Param("userid") String userid);
 }
