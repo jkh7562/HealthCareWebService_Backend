@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface GsrRepository extends JpaRepository<GSR, Long>, HealthDataRepository<GSR>{
-    boolean existsByUserid(String userid);
-    List<GSR> findByUserid(String userid);
+    //boolean existsByUserid(String userid);
+    //List<GSR> findByUserid(String userid);
 }

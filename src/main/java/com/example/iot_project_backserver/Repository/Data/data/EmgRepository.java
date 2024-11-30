@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface EmgRepository extends JpaRepository<EMG, Long>, HealthDataRepository<EMG>{
-    boolean existsByUserid(String userid);
-    List<EMG> findByUserid(String userid);
+    //boolean existsByUserid(String userid);
+    //<EMG> findByUserid(String userid);
 }

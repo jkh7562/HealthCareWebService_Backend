@@ -11,6 +11,6 @@ import java.util.List;
 @Repository
 public interface AirflowRepository extends JpaRepository<Airflow, Long>, HealthDataRepository<Airflow> {
     // Airflow 관련 쿼리 메서드 추가 가능
-    boolean existsByUserid(String userid);
-    List<Airflow> findByUserid(String userid);
+    //boolean existsByUserid(String userid);
+    //List<Airflow> findByUserid(String userid);
 }

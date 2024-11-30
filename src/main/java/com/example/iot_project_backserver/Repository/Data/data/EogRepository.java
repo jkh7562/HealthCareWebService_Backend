@@ -9,6 +9,6 @@ import java.util.List;
 // Eog 엔티티를 위한 리포지토리
 public interface EogRepository extends JpaRepository<EOG, Long>, HealthDataRepository<EOG> {
     // Eog 관련 쿼리 메서드 추가 가능
-    boolean existsByUserid(String userid);
-    List<EOG> findByUserid(String userid);
+    //boolean existsByUserid(String userid);
+    //List<EOG> findByUserid(String userid);
 }

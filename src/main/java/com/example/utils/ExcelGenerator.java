@@ -16,34 +16,6 @@ public class ExcelGenerator {
      * @param headers  헤더 데이터
      * @param data     행 데이터
      */
-    /*public static void addOrCreateExcelFile(String fileName, List<String> headers, List<Object> data) {
-        Workbook workbook;
-        Sheet sheet;
-
-        File file = new File(fileName);
-        if (file.exists()) {
-            // 기존 파일 열기
-            try (FileInputStream fis = new FileInputStream(file)) {
-                workbook = WorkbookFactory.create(fis);
-                sheet = workbook.getSheetAt(0);
-            } catch (IOException e) {
-                throw new RuntimeException("엑셀 파일 열기 중 오류 발생: " + e.getMessage(), e);
-            }
-        } else {
-            // 새 파일 생성
-            workbook = new XSSFWorkbook();
-            sheet = workbook.createSheet("Data");
-            createHeader(sheet, headers);
-        }
-
-        // 데이터 추가
-        int nextRowIndex = sheet.getLastRowNum() + 1;
-        addRow(sheet, nextRowIndex, data);
-
-        // 파일 저장
-        saveExcelFile(workbook, fileName);
-    }*/
-
     public static void addOrCreateExcelFile(String fileName, List<String> headers, List<Object> data) {
         Workbook workbook;
         Sheet sheet;
@@ -115,5 +87,4 @@ public class ExcelGenerator {
             }
         }
     }
-
 }
