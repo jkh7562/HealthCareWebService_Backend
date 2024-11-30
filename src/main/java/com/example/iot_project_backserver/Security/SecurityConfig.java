@@ -31,7 +31,7 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
+/*    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .cors().configurationSource(corsConfigurationSource()) // CORS 설정
@@ -40,7 +40,27 @@ public class SecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 세션 사용하지 않음
                 .and()
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/idcheck", "/signup", "/login", "/refresh", "/ws/**",  "/127.0.0.1/**", "port-0-iot-healthcare-1272llwukgaeg.sel5.cloudtype.app/**").permitAll() // 인증 없이 접근 가능한 엔드포인트
+                        .requestMatchers("/idcheck", "/signup", "/login", "/refresh", "/ws/**",  "/127.0.0.1/**", "https://port-0-iot-healthcare-1272llwukgaeg.sel5.cloudtype.app/**").permitAll() // 인증 없이 접근 가능한 엔드포인트
+                        .anyRequest().authenticated() // 그 외의 요청은 인증 필요
+                )
+                .addFilterBefore(new TokenAuthenticationFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class) // 필터 추가
+                .formLogin().disable(); // 로그인 폼 비활성화
+
+        return http.build();
+    }*/
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .cors().configurationSource(corsConfigurationSource()) // CORS 설정
+                .and()
+                .csrf().disable() // 필요시 CSRF 보호 비활성화
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 세션 사용하지 않음
+                .and()
+                .requiresChannel(channel -> channel
+                        .requestMatchers("https://port-0-iot-healthcare-1272llwukgaeg.sel5.cloudtype.app/**").requiresSecure() // 해당 URL에 HTTPS 강제
+                )
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/idcheck", "/signup", "/login", "/refresh", "/ws/**",  "/127.0.0.1/**").permitAll() // 인증 없이 접근 가능한 엔드포인트
                         .anyRequest().authenticated() // 그 외의 요청은 인증 필요
                 )
                 .addFilterBefore(new TokenAuthenticationFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class) // 필터 추가
@@ -48,6 +68,7 @@ public class SecurityConfig {
 
         return http.build();
     }
+
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {

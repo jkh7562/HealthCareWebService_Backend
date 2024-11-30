@@ -39,7 +39,7 @@ dependencies {
 
 
     // Apache POI 기본 라이브러리
-    implementation 'org.apache.poi:poi:5.2.3'
+    implementation 'org.apache.poi:poi:5.3.0'
 
     // Apache POI에서 XLSX 형식 지원 (OOXML)
     implementation 'org.apache.poi:poi-ooxml:5.2.3'

@@ -4,6 +4,7 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.util.List;
 
 public class ExcelGenerator {
@@ -15,7 +16,7 @@ public class ExcelGenerator {
      * @param headers  헤더 데이터
      * @param data     행 데이터
      */
-    public static void addOrCreateExcelFile(String fileName, List<String> headers, List<Object> data) {
+    /*public static void addOrCreateExcelFile(String fileName, List<String> headers, List<Object> data) {
         Workbook workbook;
         Sheet sheet;
 
@@ -41,7 +42,43 @@ public class ExcelGenerator {
 
         // 파일 저장
         saveExcelFile(workbook, fileName);
+    }*/
+
+    public static void addOrCreateExcelFile(String fileName, List<String> headers, List<Object> data) {
+        Workbook workbook;
+        Sheet sheet;
+
+        File file = new File(fileName);
+        if (!file.exists()) {
+            throw new RuntimeException("파일이 존재하지 않습니다: " + fileName);
+        }
+        if (file.length() == 0) {
+            throw new RuntimeException("파일이 비어 있습니다: " + fileName);
+        }
+
+        try (FileInputStream fis = new FileInputStream(file)) {
+            String mimeType = Files.probeContentType(file.toPath());
+            if (!"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet".equals(mimeType)) {
+                throw new RuntimeException("올바른 엑셀 파일 형식이 아닙니다: " + fileName);
+            }
+
+            workbook = WorkbookFactory.create(fis);
+            sheet = workbook.getSheetAt(0);
+        } catch (IOException e) {
+            throw new RuntimeException("엑셀 파일 열기 중 오류 발생: " + e.getMessage(), e);
+        }
+
+        // 데이터 추가
+        if (data == null || data.isEmpty()) {
+            throw new IllegalArgumentException("추가할 데이터가 없습니다.");
+        }
+        int nextRowIndex = sheet.getLastRowNum() + 1;
+        addRow(sheet, nextRowIndex, data);
+
+        // 파일 저장
+        saveExcelFile(workbook, fileName);
     }
+
 
     private static void createHeader(Sheet sheet, List<String> headers) {
         Row headerRow = sheet.createRow(0);
