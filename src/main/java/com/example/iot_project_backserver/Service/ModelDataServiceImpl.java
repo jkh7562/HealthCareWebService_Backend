@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class ModelDataServiceServiceImpl implements ModelDataService {
+public class ModelDataServiceImpl implements ModelDataService {
 
 
     @Override

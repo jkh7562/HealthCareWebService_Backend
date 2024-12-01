@@ -30,7 +30,6 @@ public class HealthDataServiceImpl implements HealthDataService {
     private final EogRepository eogRepository;
     private final EcgRepository ecgRepository;
     private final EmgRepository emgRepository;
-    private final UserRepository userRepository;
     private final GsrRepository gsrRepository;
     private final NIBPRepository nibpRepository;
     private final Spo2Repository spo2Repository;
@@ -43,6 +42,8 @@ public class HealthDataServiceImpl implements HealthDataService {
     private final EOG_ResultRepository eogResultRepository;
     private final GSR_ResultRepository gsrResultRepository;
     private final AirFlow_ResultRepository airFlowResultRepository;
+
+    private final UserRepository userRepository;
 
 
     @Autowired
@@ -82,7 +83,7 @@ public class HealthDataServiceImpl implements HealthDataService {
         this.userRepository = userRepository;
     }
 
-    // 공통 처리 로직: 제네릭 메서드로 구현  리스트 형식 데이터 처리 윟마
+    // 공통 처리 로직: 제네릭 메서드로 구현  리스트 형식 데이터 처리 위함
     private <T, A> void processAndSaveData(
             String userid,
             T data,
@@ -121,30 +122,44 @@ public class HealthDataServiceImpl implements HealthDataService {
     // ECG 데이터 처리 및 저장
     @Override
     public void processAndSaveECGData(ECG ecg) {
+        /*
+         * ECG 데이터를 처리하고 저장하는 메서드입니다. 공통적인 데이터 처리 로직을 재사용하기 위해
+         * processAndSaveData 메서드를 호출합니다.
+         *
+         * 매개변수:
+         * - ecg.getUserid(): 데이터를 저장할 사용자 ID.
+         * - ecg: 처리할 ECG 데이터 객체.
+         * - 250: 그룹 크기(ECG 데이터 평균을 계산할 때 사용할 그룹의 크기).
+         * - averages -> ... : 계산된 평균값 리스트를 ECG 데이터 객체에 설정하고, 이를 기반으로
+         *   EcgAverage 객체를 생성하여 리스트로 반환하는 함수.
+         * - ECG::setAverages: ECG 데이터에 평균값을 설정하는 메서드 참조.
+         * - ecgRepository::save: ECG 데이터를 데이터베이스에 저장하는 리포지토리 메서드.
+         * - () -> ecgRepository.findOneByUserid(ecg.getUserid()): 기존 데이터를 사용자 ID로 조회하는 함수.
+         */
         processAndSaveData(
-                ecg.getUserid(),
-                ecg,
+                ecg.getUserid(), // 사용자 ID
+                ecg, // ECG 데이터 객체
                 250, // 그룹 크기
-                averages -> averages.stream()
+                averages -> averages.stream() // 계산된 평균값 리스트를 처리
                         .map(avg -> {
-                            EcgAverage ecgAverage = new EcgAverage();
-                            ecgAverage.setEcgAverageValue(avg);
-                            ecgAverage.setUserid(ecg.getUserid());
-                            return ecgAverage;
+                            EcgAverage ecgAverage = new EcgAverage(); // 새로운 EcgAverage 객체 생성
+                            ecgAverage.setEcgAverageValue(avg); // 평균값 설정
+                            ecgAverage.setUserid(ecg.getUserid()); // 사용자 ID 설정
+                            return ecgAverage; // 생성된 객체 반환
                         })
-                        .collect(Collectors.toList()),
-                ECG::setAverages,
-                ecgRepository::save,
-                () -> ecgRepository.findOneByUserid(ecg.getUserid())
+                        .collect(Collectors.toList()), // 리스트로 수집
+                ECG::setAverages, // ECG 데이터 객체에 평균값 리스트를 설정하는 메서드
+                ecgRepository::save, // ECG 데이터를 저장하는 리포지토리 메서드
+                () -> ecgRepository.findOneByUserid(ecg.getUserid()) // 기존 데이터를 사용자 ID로 조회
         );
     }
 
-    @Override
+
+    /*    @Override
     public BodyTemp saveBodyTempData(BodyTemp bodyTemp) {
         validateUserid(bodyTemp.getUserid());
 
         Optional<BodyTemp> existingBodyTemp = bodyTempRepository.findOneByUserid(bodyTemp.getUserid());
-        //TODO 데이터를 바로 저장하는 것이 아닌 데이터의 수치 판단이 필요
         String pandanStatus = BodyTempStatus(bodyTemp.getTempdata());
         bodyTemp.setPandan(pandanStatus);
 
@@ -156,33 +171,61 @@ public class HealthDataServiceImpl implements HealthDataService {
         }else {
             return bodyTempRepository.save(bodyTemp);
         }
-    }
+    }*/
     @Override
-    public void saveOrUpdateBodyTempResult(BodyTemp bodyTemp) {
+    public BodyTemp saveBodyTempData(BodyTemp bodyTemp) {
+        // 사용자 ID를 검증하는 메서드 호출
         validateUserid(bodyTemp.getUserid());
 
-        // BodyTemp 상태를 판단
+        // 데이터베이스에서 사용자 ID로 기존 BodyTemp 데이터를 조회
+        Optional<BodyTemp> existingBodyTemp = bodyTempRepository.findOneByUserid(bodyTemp.getUserid());
+
+        // 받아온 BodyTemp의 온도 데이터를 바탕으로 판단 상태를 계산
+        String pandanStatus = BodyTempStatus(bodyTemp.getTempdata());
+        bodyTemp.setPandan(pandanStatus); // 판단 상태를 BodyTemp 객체에 설정
+
+        // 기존 데이터가 존재하는 경우
+        if (existingBodyTemp.isPresent()) {
+            // 기존 데이터를 업데이트
+            BodyTemp updatedBodyTemp = existingBodyTemp.get(); // 기존 데이터 가져오기
+            updatedBodyTemp.setTempdata(bodyTemp.getTempdata()); // 새로운 온도 데이터 설정
+            updatedBodyTemp.setPandan(pandanStatus); // 새로운 판단 상태 설정
+            return bodyTempRepository.save(updatedBodyTemp); // 업데이트된 데이터 저장 후 반환
+        } else {
+            // 기존 데이터가 없을 경우 새로운 데이터를 저장
+            return bodyTempRepository.save(bodyTemp); // 새로운 데이터 저장 후 반환
+        }
+    }
+
+
+    @Override
+    public void saveOrUpdateBodyTempResult(BodyTemp bodyTemp) {
+        // 사용자 ID를 검증하는 메서드 호출
+        validateUserid(bodyTemp.getUserid());
+
+        // BodyTemp 상태를 판단하여 결과 값을 생성
         String status = BodyTempStatus(bodyTemp.getTempdata());
 
-        // 동일한 사용자 ID와 날짜가 있는 데이터 검색
+        // 동일한 사용자 ID와 현재 날짜가 있는 데이터가 이미 존재하는지 검색
         Optional<BodyTemp_Result> existingResult = bodyTempResultRepository.findByUseridAndDate(bodyTemp.getUserid(), new Date());
 
         if (existingResult.isPresent()) {
-            // 기존 데이터가 있으면 업데이트
-            BodyTemp_Result resultToUpdate = existingResult.get();
-            resultToUpdate.setBodyTempResult(status);
-            bodyTempResultRepository.save(resultToUpdate);
+            // 기존 데이터가 있으면 해당 데이터를 업데이트
+            BodyTemp_Result resultToUpdate = existingResult.get(); // 기존 데이터를 가져옴
+            resultToUpdate.setBodyTempResult(status); // 새로운 결과 값 설정
+            bodyTempResultRepository.save(resultToUpdate); // 업데이트된 데이터 저장
             System.out.println("Updated record for userid: " + bodyTemp.getUserid() + ", date: " + resultToUpdate.getDate());
         } else {
-            // 기존 데이터가 없으면 새로 저장
-            BodyTemp_Result newResult = new BodyTemp_Result();
-            newResult.setUserid(bodyTemp.getUserid());
-            newResult.setBodyTempResult(status);
-            newResult.setDate(new Date());
-            bodyTempResultRepository.save(newResult);
+            // 기존 데이터가 없으면 새로운 데이터를 생성하여 저장
+            BodyTemp_Result newResult = new BodyTemp_Result(); // 새로운 결과 객체 생성
+            newResult.setUserid(bodyTemp.getUserid()); // 사용자 ID 설정
+            newResult.setBodyTempResult(status); // 결과 값 설정
+            newResult.setDate(new Date()); // 현재 날짜 설정
+            bodyTempResultRepository.save(newResult); // 새로운 데이터 저장
             System.out.println("Saved new record for userid: " + bodyTemp.getUserid() + ", date: " + newResult.getDate());
         }
     }
+
 
 
     //spo2 데이터 저장
@@ -641,7 +684,7 @@ public class HealthDataServiceImpl implements HealthDataService {
         }
     }
 
-    // 데이터 리스트 추출
+    // 데이터 리스트(파형 데이터)추출
     private <T> List<Float> getDataList(T data) {
         if (data instanceof ECG) {
             return ((ECG) data).getEcgdata();

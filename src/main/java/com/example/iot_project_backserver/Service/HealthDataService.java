@@ -50,10 +50,6 @@ public interface HealthDataService {
     Map<String,Object> callFastAPIEMG(EMG emg);
 
 
-
-
-
-
 }
 
 

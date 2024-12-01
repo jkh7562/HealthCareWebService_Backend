@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface EMG_ResultRepository extends JpaRepository<EMG_Result, Long>,HealthData_ResultRepository<EMG_Result>  {
-    //Optional<EMG_Result> findByUseridAndDate(String userid, Date dates);
     @Query("SELECT a FROM EMG_Result a WHERE a.userid = :userid")
     List<EMG_Result> findByUseridOrNull(@Param("userid") String userid);
 }

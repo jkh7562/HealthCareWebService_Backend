@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface GSR_ResultRepository extends JpaRepository<GSR_Result, Long>, HealthData_ResultRepository<GSR_Result> {
-    //Optional<GSR_Result> findByUseridAndDate(String userid, Date dates);
     @Query("SELECT a FROM GSR_Result a WHERE a.userid = :userid")
     List<GSR_Result> findByUseridOrNull(@Param("userid") String userid);
 }

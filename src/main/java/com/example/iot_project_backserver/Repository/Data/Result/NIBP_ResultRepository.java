@@ -14,7 +14,6 @@ import java.util.Optional;
 
 @Repository
 public interface NIBP_ResultRepository extends JpaRepository<NIBP_Result, Long>,HealthData_ResultRepository<NIBP_Result>  {
-    //Optional<NIBP_Result> findByUseridAndDate(String userid, Date date);
     @Query("SELECT a FROM NIBP_Result a WHERE a.userid = :userid")
     List<NIBP_Result> findByUseridOrNull(@Param("userid") String userid);
 }

@@ -80,7 +80,7 @@ public class HealthDataController {
 
 
     @PostMapping("/nibp")
-    public ResponseEntity<String> saveNIBP(@RequestBody NIBP nibp) {
+    public ResponseEntity<String> saveNIBPData(@RequestBody NIBP nibp) {
         try {
             // BodyTemp 테이블에 데이터 저장
             healthDataService.saveNIBPData(nibp);
@@ -97,7 +97,7 @@ public class HealthDataController {
 
 
     @PostMapping("/spo2")
-    public ResponseEntity<String> saveSPO2(@RequestBody SPO2 spo2) {
+    public ResponseEntity<String> saveSPO2Data(@RequestBody SPO2 spo2) {
         try {
             // SPO2 테이블에 데이터 저장
             healthDataService.saveSPO2Data(spo2);

@@ -13,8 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface SPO2_ResultRepository extends JpaRepository<SPO2_Result, Long>, JpaSpecificationExecutor<SPO2_Result> {
-    //Optional<SPO2_Result> findByUseridAndDate(String userid, Date date);
+public interface SPO2_ResultRepository extends JpaRepository<SPO2_Result, Long>, HealthData_ResultRepository<SPO2_Result> {
     @Query("SELECT a FROM SPO2_Result a WHERE a.userid = :userid")
     List<SPO2_Result> findByUseridOrNull(@Param("userid") String userid);
 }

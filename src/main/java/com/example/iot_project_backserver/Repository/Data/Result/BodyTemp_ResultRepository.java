@@ -13,7 +13,6 @@ import java.util.Optional;
 
 @Repository
 public interface BodyTemp_ResultRepository extends JpaRepository<BodyTemp_Result, Long>, HealthData_ResultRepository<BodyTemp_Result> {
-    //Optional<BodyTemp_Result> findByUseridAndDate(String userid, Date date);
     @Query("SELECT a FROM BodyTemp_Result a WHERE a.userid = :userid")
     List<BodyTemp_Result> findByUseridOrNull(@Param("userid") String userid);
 }

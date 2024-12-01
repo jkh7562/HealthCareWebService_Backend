@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface EOG_ResultRepository extends JpaRepository<EOG_Result, Long>,HealthData_ResultRepository<EOG_Result>  {
-    //Optional<EOG_Result> findByUseridAndDate(String userid, Date dates);
     @Query("SELECT a FROM EOG_Result a WHERE a.userid = :userid")
     List<EOG_Result> findByUseridOrNull(@Param("userid") String userid);
 }
