@@ -7,6 +7,7 @@ import com.example.iot_project_backserver.Repository.Data.Result.*;
 import com.example.iot_project_backserver.Repository.Data.data.*;
 import com.example.iot_project_backserver.Repository.User.UserRepository;
 import com.example.iot_project_backserver.exception.CustomException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -23,6 +24,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class HealthDataServiceImpl implements HealthDataService {
 
     private final AirflowRepository airflowRepository;
@@ -46,7 +48,7 @@ public class HealthDataServiceImpl implements HealthDataService {
     private final UserRepository userRepository;
 
 
-    @Autowired
+    /*@Autowired
     public HealthDataServiceImpl(AirflowRepository airflowRepository,
                                  BodyTempRepository bodyTempRepository,
                                  EogRepository eogRepository,
@@ -81,7 +83,7 @@ public class HealthDataServiceImpl implements HealthDataService {
         this.gsrResultRepository = gsrResultRepository;
         this.airFlowResultRepository = airFlowResultRepository;
         this.userRepository = userRepository;
-    }
+    }*/
 
     // 공통 처리 로직: 제네릭 메서드로 구현  리스트 형식 데이터 처리 위함
     private <T, A> void processAndSaveData(
